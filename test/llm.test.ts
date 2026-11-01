@@ -7,10 +7,19 @@ describe("describeLlmError", () => {
     const e = new LlmError("mistral", 401, "http_error", "Unauthorized");
     expect(describeLlmError(e)).toBe('provider=mistral status=401 code=http_error detail="Unauthorized"');
   });
-  it("logt van AWS-fouten alleen naam en status, geen message", () => {
-    const e = Object.assign(new Error("geheime inhoud"), { name: "AccessDeniedException", $metadata: { httpStatusCode: 403 } });
+  it("logt bij AccessDenied de geredigeerde melding", () => {
+    const e = Object.assign(new Error("User: arn:aws:iam::757952140291:user/x is not authorized to perform: bedrock:InvokeModel"), {
+      name: "AccessDeniedException",
+      $metadata: { httpStatusCode: 403 },
+    });
     const s = describeLlmError(e);
-    expect(s).toBe("name=AccessDeniedException status=403");
+    expect(s).toContain("bedrock:InvokeModel");
+    expect(s).not.toContain("757952140291");
+  });
+  it("logt van overige AWS-fouten alleen naam en status, geen message", () => {
+    const e = Object.assign(new Error("geheime inhoud"), { name: "ThrottlingException", $metadata: { httpStatusCode: 429 } });
+    const s = describeLlmError(e);
+    expect(s).toBe("name=ThrottlingException status=429");
     expect(s).not.toContain("geheime");
   });
 });
