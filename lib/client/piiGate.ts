@@ -3,7 +3,8 @@
 import { findBsnIban } from "../pii/detect";
 
 export type Box = { x: number; y: number; w: number; h: number };
-export type GateHit = { type: "bsn" | "iban"; box: Box };
+/** box.w === 0: wel gevonden in de tekst, maar niet terug te vinden op de afbeelding. */
+export type GateHit = { type: "bsn" | "iban"; box: Box; match: string };
 
 type TWorker = { recognize: (img: HTMLCanvasElement, o?: object, out?: object) => Promise<{ data: TData }>; terminate: () => Promise<unknown> };
 type TBbox = { x0: number; y0: number; x1: number; y1: number };
@@ -62,14 +63,31 @@ export async function scanForBsnIban(source: HTMLCanvasElement): Promise<GateHit
       const boxes = words.length ? words.map((w) => toBox(w.bbox)) : [toBox(line.bbox)];
       const x0 = Math.min(...boxes.map((b) => b.x)), y0 = Math.min(...boxes.map((b) => b.y));
       const x1 = Math.max(...boxes.map((b) => b.x + b.w)), y1 = Math.max(...boxes.map((b) => b.y + b.h));
-      hits.push({ type: h.type as "bsn" | "iban", box: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } });
+      hits.push({ type: h.type as "bsn" | "iban", box: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, match: h.match });
     }
   }
 
-  // Vangnet: ook op de volledige tekst (regels kunnen verkeerd gesplitst zijn).
+  // Vangnet: ook op de volledige tekst, voor labels die op een eigen regel staan
+  // ("BSN" ⏎ "123456789"). Regeleinden blijven staan, anders plakt de regex
+  // cijfers uit verschillende regels/kolommen aan elkaar tot een nep-BSN.
   if (hits.length === 0) {
-    const flat = findBsnIban(data.text.replace(/\n/g, " "));
-    for (const h of flat) hits.push({ type: h.type as "bsn" | "iban", box: { x: 0, y: 0, w: 0, h: 0 } });
+    const allWords = lines.flatMap((l) => l.words);
+    for (const h of findBsnIban(data.text)) {
+      const digits = h.match.replace(/[^\dA-Za-z]/g, "");
+      const words = allWords.filter((w) => {
+        const t = w.text.replace(/[^\dA-Za-z]/g, "");
+        return t.length >= 2 && /\d/.test(t) && digits.includes(t);
+      });
+      const boxes = words.map((w) => toBox(w.bbox));
+      const box = boxes.length
+        ? (() => {
+            const x0 = Math.min(...boxes.map((b) => b.x)), y0 = Math.min(...boxes.map((b) => b.y));
+            const x1 = Math.max(...boxes.map((b) => b.x + b.w)), y1 = Math.max(...boxes.map((b) => b.y + b.h));
+            return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+          })()
+        : { x: 0, y: 0, w: 0, h: 0 };
+      hits.push({ type: h.type as "bsn" | "iban", box, match: h.match.trim() });
+    }
   }
   return hits;
 }
