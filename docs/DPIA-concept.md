@@ -7,13 +7,13 @@
 | Grondslag | Uitdrukkelijke toestemming (art. 6.1a AVG), via een checkbox vóór het uploaden |
 | Betrokkenen | Bezoekers die een salarisstrook uploaden |
 | Verantwoordelijke | [bedrijf] |
-| Verwerkers | AWS (Bedrock, eu-central-1), Vercel (fra1), Supabase (eu-central-1), Upstash (EU) |
+| Verwerkers | Mistral AI (EU),  Vercel (fra1), Supabase (eu-central-1), Upstash (EU) |
 
 ## 2. Gegevensstromen
 | Gegeven | Waar | Hoe lang |
 |---|---|---|
 | Originele PDF/afbeelding | Alleen in de browser | Tot het tabblad sluit |
-| Afgeschermde afbeelding (zonder BSN/IBAN, eventueel ook zonder naam/adres) | Vercel-functie (in geheugen) → Bedrock | Duur van één request (~10-20 s). Bedrock bewaart niets |
+| Afgeschermde afbeelding (zonder BSN/IBAN, eventueel ook zonder naam/adres) | Vercel-functie (in geheugen) → Mistral | Duur van één request (~10-20 s). Mistral bewaart niets mits zero data retention actief is |
 | Uitgelezen velden (zonder PII) + HMAC-token | Browser ↔ server | Token verloopt na 1 uur |
 | Geanonimiseerd salarisrecord | Supabase | Max. 3 jaar ([opschoonjob instellen]) |
 | Gehasht IP (dagelijkse salt) | Upstash | 24 uur |
@@ -21,7 +21,7 @@
 ## 3. Risico's en maatregelen
 | Risico | Kans/impact | Maatregel |
 |---|---|---|
-| Verwerking van BSN (art. 46 UAVG) | Middel/hoog | Afschermen verplicht; OCR-blokkade in de browser; LLM-detectie; output-scrub; geen opslag. **Restrisico:** een BSN dat door alle lagen glipt, wordt kort door Bedrock verwerkt → juridisch beoordelen |
+| Verwerking van BSN (art. 46 UAVG) | Middel/hoog | Afschermen verplicht; OCR-blokkade in de browser; LLM-detectie; output-scrub; geen opslag. **Restrisico:** een BSN dat door alle lagen glipt, wordt kort door Mistral verwerkt → juridisch beoordelen |
 | Naam/adres op de strook bij de LLM | Hoog/laag | Gebruiker mag ze afschermen; de LLM mag ze niet teruggeven; scrub; geen opslag |
 | Herleidbaarheid via een zeldzame combinatie (functie + sector + provincie + leeftijd) | Laag/middel | Alleen banden opgeslagen; k ≥ 10 bij tonen; geen ruwe export |
 | Lek van de database | Laag/laag | Geen directe PII; RLS; alleen een service role op de server |

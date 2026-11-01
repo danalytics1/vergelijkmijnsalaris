@@ -17,7 +17,7 @@ export default function Page() {
       <ul>
         <li>Je hebt geen account nodig. We vragen geen naam, e-mailadres of telefoonnummer.</li>
         <li>Je schermt je BSN en IBAN af in je eigen browser. Dat is verplicht en wordt automatisch gecontroleerd. Een originele PDF verlaat je apparaat nooit.</li>
-        <li>De afgeschermde afbeelding wordt eenmalig door een AI-model in de EU (Frankfurt) geanalyseerd en daarna direct weggegooid. We slaan je strook nergens op.</li>
+        <li>De afgeschermde afbeelding wordt eenmalig door een AI-model in de EU geanalyseerd en daarna direct weggegooid. We slaan je strook nergens op.</li>
         <li>We bewaren alleen geanonimiseerde salarisgegevens, zoals functie, sector, provincie, leeftijdscategorie en salaris. Die zijn niet tot jou te herleiden.</li>
         <li>Vergelijkingen tonen we alleen voor groepen van minimaal 10 personen.</li>
       </ul>
@@ -46,7 +46,7 @@ export default function Page() {
       <h2>Verwerkers</h2>
       <p>We werken met de volgende verwerkers. Met allemaal is een verwerkersovereenkomst gesloten en de verwerking vindt plaats in de EU:</p>
       <ul>
-        <li>Amazon Web Services (AWS Bedrock, Frankfurt): AI-analyse. Bedrock bewaart je invoer niet en gebruikt die niet voor training.</li>
+        <li>Mistral AI (Frankrijk, verwerking in de EU): AI-analyse. Met zero data retention bewaart Mistral je invoer niet en gebruikt die niet voor training.</li>
         <li>Vercel (Frankfurt): hosting van de website.</li>
         <li>Supabase (Frankfurt): database met geanonimiseerde salarisgegevens.</li>
         <li>[Upstash (EU): rate limiting]</li>

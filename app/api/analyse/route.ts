@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { getExtractor, type PageImage } from "@/lib/llm";
+import { describeLlmError } from "@/lib/llm/errors";
 import { ExtractionSchema } from "@/lib/schema";
 import { scrubExtraction } from "@/lib/pii/scrub";
 import { verify } from "@/lib/verify/score";
@@ -66,8 +67,9 @@ export async function POST(req: Request) {
   let raw: unknown;
   try {
     raw = await getExtractor().extract(pages);
-  } catch {
-    console.error("analyse: LLM-aanroep mislukt"); // geen details: kunnen documentinhoud bevatten
+  } catch (e) {
+    // Alleen veilige metadata (status/code), nooit documentinhoud of modeloutput.
+    console.error(`analyse: LLM-aanroep mislukt (${describeLlmError(e)})`);
     return err(502, "llm_failed", "De analyse is mislukt. Probeer het opnieuw.");
   } finally {
     // Expliciet buffers vrijgeven (best effort)
