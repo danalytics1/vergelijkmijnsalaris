@@ -4,7 +4,7 @@
  */
 export class LlmError extends Error {
   constructor(
-    readonly provider: "mistral" | "bedrock",
+    readonly provider: "mistral" | "anthropic" | "bedrock",
     readonly status: number | null,
     readonly code: string,
     readonly detail?: string,

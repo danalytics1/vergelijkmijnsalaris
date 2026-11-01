@@ -60,7 +60,8 @@ Ongeldige rijen worden gerapporteerd en overgeslagen. `data/` staat in `.gitigno
 - [ ] **Juridische toets van de BSN-verwerking (art. 46 UAVG)** en de DPIA (`docs/DPIA-concept.md`) door een privacyjurist.
 - [ ] Verwerkersovereenkomsten met AWS, Vercel, Supabase en Upstash. Alle projecten in een EU-regio.
 - [ ] Mistral: **zero data retention** aangevraagd en goedgekeurd in La Plateforme, `LLM_PROVIDER=mistral` en `MISTRAL_API_KEY` gezet.
-- [ ] (Alleen bij `LLM_PROVIDER=bedrock`) AWS Bedrock: **Model invocation logging UIT**, toegang tot het model aangevraagd in `eu-central-1` en een IAM-user met alleen `bedrock:InvokeModel`.
+- [ ] (Alleen bij `LLM_PROVIDER=anthropic`) Anthropic: `ANTHROPIC_API_KEY` gezet. Let op: verwerking buiten de EU; doorgifte juridisch laten toetsen en de bewaartermijn in de privacyverklaring invullen.
+- [ ] (Alleen bij `LLM_PROVIDER=bedrock`) AWS Bedrock: **Model invocation logging UIT**, Anthropic-use-case-formulier ingevuld, IAM-user met alleen `bedrock:InvokeModel` op het `eu.`-inference-profile, access keys als `BEDROCK_ACCESS_KEY_ID`/`BEDROCK_SECRET_ACCESS_KEY` in Vercel (geen `AWS_BEARER_TOKEN_BEDROCK`).
 - [ ] Vercel: function region `fra1` (staat in `vercel.json`) en de log drains beoordelen.
 - [ ] `TOKEN_SECRET` minimaal 32 random tekens. Upstash Redis instellen voor rate limiting; de in-memory fallback is alleen voor dev.
 - [ ] Bedrijfsgegevens invullen in `app/privacy/page.tsx`.

@@ -1,9 +1,11 @@
 import Prose from "@/components/Prose";
+import { llmInfo } from "@/lib/llm/provider";
 
 export const metadata = { title: "Privacyverklaring – VergelijkMijnSalaris" };
 
 // LET OP: concept. Laat dit vóór livegang toetsen door een privacyjurist en vul de [placeholders] in.
 export default function Page() {
+  const llm = llmInfo();
   return (
     <Prose>
       <h1>Privacyverklaring</h1>
@@ -17,7 +19,7 @@ export default function Page() {
       <ul>
         <li>Je hebt geen account nodig. We vragen geen naam, e-mailadres of telefoonnummer.</li>
         <li>Je schermt je BSN en IBAN af in je eigen browser. Dat is verplicht en wordt automatisch gecontroleerd. Een originele PDF verlaat je apparaat nooit.</li>
-        <li>De afgeschermde afbeelding wordt eenmalig door een AI-model in de EU geanalyseerd en daarna direct weggegooid. We slaan je strook nergens op.</li>
+        <li>De afgeschermde afbeelding wordt eenmalig door een AI-model {llm.euOnly ? "in de EU" : "buiten de EU (Verenigde Staten)"} geanalyseerd en daarna direct weggegooid. We slaan je strook nergens op.</li>
         <li>We bewaren alleen geanonimiseerde salarisgegevens, zoals functie, sector, provincie, leeftijdscategorie en salaris. Die zijn niet tot jou te herleiden.</li>
         <li>Vergelijkingen tonen we alleen voor groepen van minimaal 10 personen.</li>
       </ul>
@@ -44,16 +46,17 @@ export default function Page() {
       </p>
 
       <h2>Verwerkers</h2>
-      <p>We werken met de volgende verwerkers. Met allemaal is een verwerkersovereenkomst gesloten en de verwerking vindt plaats in de EU:</p>
+      <p>We werken met de volgende verwerkers. Met allemaal is een verwerkersovereenkomst gesloten{llm.euOnly ? " en de verwerking vindt plaats in de EU" : ""}:</p>
       <ul>
-        <li>Mistral AI (Frankrijk, verwerking in de EU): AI-analyse. Met zero data retention bewaart Mistral je invoer niet en gebruikt die niet voor training.</li>
+        <li>{llm.processor}</li>
         <li>Vercel (Frankfurt): hosting van de website.</li>
         <li>Supabase (Frankfurt): database met geanonimiseerde salarisgegevens.</li>
         <li>[Upstash (EU): rate limiting]</li>
       </ul>
       <p>
-        Een aantal van deze partijen is Amerikaans. Doorgifte buiten de EU is in de basis niet nodig. Voor eventuele toegang vanuit de VS gelden het EU-US Data Privacy
-        Framework en standaardcontractbepalingen.
+        {llm.euOnly
+          ? "Een aantal van deze partijen is Amerikaans. Doorgifte buiten de EU is in de basis niet nodig. Voor eventuele toegang vanuit de VS gelden het EU-US Data Privacy Framework en standaardcontractbepalingen."
+          : "Een aantal van deze partijen is Amerikaans. De AI-analyse vindt plaats in de VS. Voor die doorgifte gelden [het EU-US Data Privacy Framework en/of standaardcontractbepalingen: laten toetsen]."}
       </p>
 
       <h2>Geautomatiseerde beoordeling</h2>
