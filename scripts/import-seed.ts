@@ -77,6 +77,11 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
   const uren = num("uren_per_week");
   const bruto = num("bruto_maand");
   const jaar = num("jaar");
+  const pct = (k: string, max: number) => {
+    const v = num(k);
+    if (v != null && (v < 0 || v > max)) errors.push(k);
+    return v;
+  };
   const opl = ci(OPLEIDINGSNIVEAUS, get("opleidingsniveau") ?? "onbekend") ?? "onbekend";
 
   if (!functie || functie.length < 2) errors.push("functie");
@@ -86,6 +91,7 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
   if (uren == null || uren < 1 || uren > 60) errors.push("uren");
   if (bruto == null || bruto < 500 || bruto > 100000) errors.push("bruto_maand");
   if (jaar == null || jaar < 2015 || jaar > 2100) errors.push("jaar");
+  const ikb = pct("ikb_pct", 40), bonus = pct("bonus_pct", 100), pensWg = pct("pensioen_werkgever_aandeel", 100);
   if (errors.length) return { ok: false as const, errors };
 
   return {
@@ -108,6 +114,9 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
       dertiende_maand: bool("dertiende_maand"),
       pensioen_pct: num("pensioen_pct"),
       lease_auto: bool("lease_auto"),
+      ikb_pct: ikb,
+      bonus_pct: bonus,
+      pensioen_werkgever_aandeel: pensWg,
       cao: get("cao"),
       periode_jaar: jaar!,
     },

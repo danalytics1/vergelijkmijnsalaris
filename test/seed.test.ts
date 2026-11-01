@@ -29,6 +29,13 @@ describe("seed import", () => {
     const r = mapRow({ Functie: "Developer", Sector: "IT", Leeftijd: "30", Uren: "40", Bruto: "4000", Jaar: "2026", Sen: "Medior" }, m);
     expect(r.ok && r.row.seniority).toBe("medior");
   });
+  it("leest IKB, bonus en werkgeversaandeel pensioen en keurt waarden buiten bereik af", () => {
+    const m = { ...mapping, columns: { ...mapping.columns, ikb_pct: "IKB", bonus_pct: "Bonus", pensioen_werkgever_aandeel: "PWG" } };
+    const base = { Functie: "Adviseur", Sector: "IT", Leeftijd: "30", Uren: "36", Bruto: "5000", Jaar: "2026" };
+    const r = mapRow({ ...base, IKB: "16,5", Bonus: "", PWG: "70" }, m);
+    expect(r.ok && [r.row.ikb_pct, r.row.bonus_pct, r.row.pensioen_werkgever_aandeel]).toEqual([16.5, null, 70]);
+    expect(mapRow({ ...base, IKB: "60" }, m).ok).toBe(false);
+  });
   it("keurt ongeldige rijen af", () => {
     const r = mapRow({ Functie: "x", Sector: "Onbekend", Leeftijd: "200", Uren: "40", Bruto: "10", Jaar: "2026" }, mapping);
     expect(r.ok).toBe(false);

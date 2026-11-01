@@ -1,5 +1,5 @@
 {
-  "_uitleg": "Mapping voor nlsalaris-reddit-2026.csv: 72 salarisposts uit r/NLSalaris (sep-okt 2026), handmatig gestructureerd. Bruto = basissalaris per maand, zonder vakantiegeld, IKB, 13e maand, ORT en bonus. post_id wordt niet geïmporteerd en dient alleen om terug te vinden welke post het was.",
+  "_uitleg": "Mapping voor nlsalaris-reddit-2026.csv: 72 salarisposts uit r/NLSalaris (sep-okt 2026), handmatig gestructureerd. Bruto = basissalaris per maand, zonder vakantiegeld, IKB, 13e maand, ORT en bonus. post_id wordt niet geïmporteerd en dient alleen om terug te vinden welke post het was. IKB = % van basissalaris. Bonus = gebruikelijke bonus/winstdeling/OTE als % van jaarlijks basissalaris (0 = expliciet geen; leeg = onbekend of bedrag niet genoemd; #31, #74 en #99 zijn schattingen omgerekend vanuit netto of 'tot x maandsalaris'). Pensioen werkgever = % van de premie dat de werkgever betaalt (0 = werkgever betaalt niets).",
   "delimiter": ";",
   "decimal": ".",
   "columns": {
@@ -17,6 +17,9 @@
     "lease_auto": "Leaseauto",
     "cao": "Cao",
     "seniority": "Senioriteit",
-    "jaar": "Jaar"
+    "jaar": "Jaar",
+    "ikb_pct": "IKB",
+    "bonus_pct": "Bonus",
+    "pensioen_werkgever_aandeel": "Pensioen WG-aandeel"
   }
 }

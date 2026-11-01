@@ -1,73 +1,73 @@
-post_id;Functie;Sector;Provincie;Leeftijd;Ervaring;Opleiding;Uren;Bruto maandsalaris;Vakantiegeld;13e maand;Pensioen werknemer;Leaseauto;Cao;Senioriteit;Jaar
-1xkmpz7;Persoonlijk begeleider;Zorg en welzijn;Drenthe;30;6;mbo;32;3200;8;ja;;nee;Gehandicaptenzorg;;2026
-1xkeatu;Huisarts in opleiding;Zorg en welzijn;;28;2;wo;38;4505;8;ja;;nee;;;2026
-1xjj6o7;Financieel medewerker;Zakelijke dienstverlening;;21;1.5;mbo;32;2900;;nee;;nee;;junior;2026
-1xjbjrq;Verkoop binnendienst;Handel;Noord-Brabant;29;8;mbo;40;3250;;nee;;nee;;;2026
-1xjbc90;Kwaliteitsmedewerker;Industrie;;32;5;wo;40;3240;;ja;;nee;;junior;2026
-1xj9b18;Transformation Project Manager;Industrie;Zuid-Holland;29;6.5;wo;40;6944;8;nee;;nee;;senior;2026
-1xiy83b;Project Manager;Zakelijke dienstverlening;;26;3;wo;40;4500;;nee;;nee;;junior;2026
-1xi2ak8;Customer Success Manager;ICT;;28;3;wo;40;3241;8;nee;;nee;;junior;2026
-1xhm6e0;Business Developer;ICT;;23;0;hbo;40;2600;8;nee;;nee;;junior;2026
-1xgzxzl;Test automation engineer;ICT;;37;7;wo;40;5275;;nee;;nee;;senior;2026
-1xgynvd;SAP BI developer;Energie;;27;3;wo;40;5570;;ja;;nee;;medior;2026
-1xglufr;UX/UI Designer;Financiële dienstverlening;;34;18;hbo;40;7200;;nee;;nee;;senior;2026
-1xfz16c;Calculator;Industrie;Zuid-Holland;26;1;hbo;40;3500;;nee;;nee;;;2026
-1xfeo1x;SOC Analyst;ICT;;40;13;hbo;40;6150;;nee;;ja;;senior;2026
-1xf9hyq;Winkelmedewerker / bezorger;Handel;;24;4;hbo;32;2640;;nee;;nee;;;2026
-1xezx8q;Assistent accountant;Zakelijke dienstverlening;Zuid-Holland;26;3.5;mbo;36;3285;;nee;;nee;;medior;2026
-1xe7vvz;Business Analyst;Zakelijke dienstverlening;Utrecht;25;1;hbo;40;3400;;nee;;nee;;junior;2026
-1xe7146;Projectleider elektrotechniek;Bouw;Utrecht;43;27;hbo;40;5225;;nee;;ja;;senior;2026
-1xdpehg;Manager Technische Dienst;Industrie;Noord-Brabant;41;22;mbo;40;13300;;nee;;;;;2026
-1xd9bov;Sales manager;Zakelijke dienstverlening;Zuid-Holland;29;10;hbo;40;5500;;nee;;ja;;;2026
-1xd8ut8;Programma Management Officer;Financiële dienstverlening;Groningen;33;5;wo;38;4500;8.3;ja;7.5;nee;;junior;2026
-1xcc9b4;Financieel Analist;Industrie;;22;2;hbo;40;4200;;nee;;nee;;;2026
-1xakbrb;Project Engineer;Industrie;Gelderland;28;6;hbo;40;4350;;nee;;nee;Metalektro;medior;2026
-1xa2xzx;Marketing & Communicatie specialist;ICT;Utrecht;36;10;hbo;36;4725;8;;;nee;;medior;2026
-1x9xkjy;Informatieanalist;ICT;Noord-Holland;24;4;wo;40;3500;;ja;;ja;;medior;2026
-1x9t4th;IT Audit Manager;Industrie;Noord-Holland;36;14;hbo;40;7968;;nee;;nee;;senior;2026
-1x9oj44;Coördinator Employee Services;Zakelijke dienstverlening;;25;0;onbekend;40;3150;;;;ja;;;2026
-1x6vls8;Recruitmentmanager;Bouw;Utrecht;36;15;onbekend;40;6100;;nee;;ja;;senior;2026
-1x6ufv5;Verzekeringsadviseur;Financiële dienstverlening;Noord-Brabant;27;3;hbo;40;3400;;nee;;nee;;;2026
-1x632ko;Mechanical engineer;Industrie;;25;2;hbo;40;3500;;nee;;nee;Metalektro;junior;2026
-1x5rtn5;Technisch tekenaar / werkvoorbereider;Bouw;Overijssel;21;4;mbo;40;2750;;nee;;nee;;junior;2026
-1x5llam;Operations manager hotel;Horeca;Noord-Holland;36;15;onbekend;38;3500;;nee;;nee;;;2026
-1x5a4rt;BIM Coördinator;Overheid;Noord-Holland;26;7;hbo;40;6000;;ja;;nee;;;2026
-1x3vcel;Senior Consultant Digital Manufacturing;Zakelijke dienstverlening;Utrecht;32;8;wo;40;5900;;ja;;nee;;senior;2026
-1x2on99;Software Engineer;ICT;Noord-Holland;33;10;hbo;40;8370;;nee;;nee;;senior;2026
-1x2fzun;Site Manager logistiek;Transport en logistiek;Utrecht;31;6;wo;40;7100;;nee;;ja;;;2026
-1x2dnxn;Manufacturing Engineer;Industrie;Zuid-Holland;30;5;wo;38;5000;;ja;;nee;;medior;2026
-1x29rr3;HSE auditor / adviseur;Industrie;Utrecht;62;42;onbekend;40;8800;;nee;;ja;;senior;2026
-1x1wfx2;Mechanical engineer;Industrie;Utrecht;36;10;mbo;40;5200;;ja;;nee;;;2026
-1x1o8g9;Functioneel beheerder;Zorg en welzijn;Noord-Brabant;34;10;mbo;28;2794;;ja;;nee;;;2026
-1x1h6v6;Werkvoorbereider;Bouw;Zuid-Holland;35;3;mbo;40;3108;;ja;;nee;;;2026
-1x1gbyk;Operationeel Directeur hotels;Horeca;;29;10;hbo;40;6500;;nee;;ja;;senior;2026
-1x0xias;Plaatwerker;Industrie;Noord-Brabant;26;7;mbo;40;3400;;nee;;nee;Kleinmetaal;;2026
-1x0pl63;Werkvoorbereider / Calculator;Bouw;Utrecht;26;6;mbo;42;3713;;nee;;ja;Kleinmetaal;senior;2026
-1x09is2;Projectleider vastgoed;Zakelijke dienstverlening;;35;8;mbo;40;6250;;ja;;nee;;senior;2026
-1wzqgr5;Cloud Engineer;ICT;;27;1.5;wo;36;4000;;nee;;nee;;medior;2026
-1wzdurj;IT Support engineer;ICT;Noord-Brabant;23;0.5;hbo;40;3000;;nee;;nee;;junior;2026
-1wz3ers;CISO;Financiële dienstverlening;;36;15;hbo;28;8300;;nee;;nee;;senior;2026
-1wz2jov;System Administrator;ICT;Zuid-Holland;30;1.5;mbo;40;2670;;;;nee;;junior;2026
-1wywv2x;IT Field Engineer;ICT;Utrecht;21;3;mbo;40;3200;;nee;;ja;;junior;2026
-1wyvc74;Data engineer;Overheid;;30;7;mbo;36;5100;;ja;;nee;;medior;2026
-1wyhs1u;Online Marketeer;Zakelijke dienstverlening;Gelderland;25;3;hbo;40;3850;;nee;;nee;;medior;2026
-1wyei9b;Software developer;ICT;Zuid-Holland;24;1.5;hbo;36;2900;;nee;;nee;;junior;2026
-1wy858s;Implementatieconsultant;ICT;Noord-Brabant;35;7;hbo;40;5150;;nee;;nee;;medior;2026
-1wy7zve;Archivaris / onderzoeker;Overheid;;42;20;wo;36;5575;;ja;;nee;;senior;2026
-1wy3y85;Senior Treasury Analyst;Financiële dienstverlening;Noord-Holland;28;5;onbekend;40;7360;;nee;;nee;;senior;2026
-1wy2ehv;Supervisor Aviation Security;Transport en logistiek;Noord-Brabant;33;7;onbekend;40;3800;;nee;;ja;;;2026
-1wxh60g;Data Analyst;Financiële dienstverlening;;30;7;wo;40;6412;8;ja;5.5;nee;;senior;2026
-1wvnvye;Onderhoudsmonteur;Bouw;;24;3;mbo;40;3263;;nee;;nee;;junior;2026
-1wvmt92;E&I technicus;Industrie;Noord-Holland;34;9;mbo;36;5562;;nee;;nee;;senior;2026
-1wv8hmi;Adviseur;Cultuur en recreatie;Noord-Holland;23;2.5;hbo;36;4500;;ja;;nee;;medior;2026
-1wv7rd7;Scientist;Industrie;Noord-Holland;31;6.5;wo;40;5500;;ja;;nee;;medior;2026
-1wv3ddn;Integration engineer;Industrie;Noord-Brabant;27;2.5;wo;40;3850;;nee;;nee;;junior;2026
-1wuu46o;Cost Engineer;Energie;Gelderland;36;10;hbo;38;6235;;ja;;nee;;medior;2026
-1wuafw7;Senior Support Engineer;ICT;Groningen;32;5;mbo;36;3416.56;;nee;;ja;;senior;2026
-1wu7qvh;Workplace engineer;ICT;Zuid-Holland;28;6.5;mbo;40;3150;;nee;;ja;;medior;2026
-1wu7bcs;Data Engineer;ICT;Zuid-Holland;39;10;wo;40;6000;;nee;;ja;;senior;2026
-1wu6an4;IT Engineer;ICT;;26;4;mbo;32;2550;8;nee;;ja;;;2026
-1wu2a90;Manager IT development;Handel;;35;12;wo;40;6800;;nee;;ja;;;2026
-1wtz9vg;Beleidsadviseur Rijksoverheid;Overheid;Zuid-Holland;28;4.5;wo;36;5769.16;;ja;;nee;Rijk;senior;2026
-1wtv3al;Coördinator Bouw en Techniek;Financiële dienstverlening;Utrecht;33;2;hbo;38;4950;;ja;;nee;;medior;2026
-1wt7rb8;HR Administrator;Zakelijke dienstverlening;Zuid-Holland;28;0.75;hbo;36;2700;;ja;;nee;;junior;2026
+post_id;Functie;Sector;Provincie;Leeftijd;Ervaring;Opleiding;Uren;Bruto maandsalaris;Vakantiegeld;13e maand;Pensioen werknemer;Leaseauto;Cao;Senioriteit;Jaar;IKB;Bonus;Pensioen WG-aandeel
+1xkmpz7;Persoonlijk begeleider;Zorg en welzijn;Drenthe;30;6;mbo;32;3200;8;ja;;nee;Gehandicaptenzorg;;2026;;0;
+1xkeatu;Huisarts in opleiding;Zorg en welzijn;;28;2;wo;38;4505;8;ja;;nee;;;2026;;0;
+1xjj6o7;Financieel medewerker;Zakelijke dienstverlening;;21;1.5;mbo;32;2900;;nee;;nee;;junior;2026;;0;50
+1xjbjrq;Verkoop binnendienst;Handel;Noord-Brabant;29;8;mbo;40;3250;;nee;;nee;;;2026;;0;
+1xjbc90;Kwaliteitsmedewerker;Industrie;;32;5;wo;40;3240;;ja;;nee;;junior;2026;;;
+1xj9b18;Transformation Project Manager;Industrie;Zuid-Holland;29;6.5;wo;40;6944;8;nee;;nee;;senior;2026;;12;
+1xiy83b;Project Manager;Zakelijke dienstverlening;;26;3;wo;40;4500;;nee;;nee;;junior;2026;;;0
+1xi2ak8;Customer Success Manager;ICT;;28;3;wo;40;3241;8;nee;;nee;;junior;2026;;21.6;0
+1xhm6e0;Business Developer;ICT;;23;0;hbo;40;2600;8;nee;;nee;;junior;2026;;0;0
+1xgzxzl;Test automation engineer;ICT;;37;7;wo;40;5275;;nee;;nee;;senior;2026;;;67
+1xgynvd;SAP BI developer;Energie;;27;3;wo;40;5570;;ja;;nee;;medior;2026;;;70
+1xglufr;UX/UI Designer;Financiële dienstverlening;;34;18;hbo;40;7200;;nee;;nee;;senior;2026;;8;100
+1xfz16c;Calculator;Industrie;Zuid-Holland;26;1;hbo;40;3500;;nee;;nee;;;2026;;;
+1xfeo1x;SOC Analyst;ICT;;40;13;hbo;40;6150;;nee;;ja;;senior;2026;;;75
+1xf9hyq;Winkelmedewerker / bezorger;Handel;;24;4;hbo;32;2640;;nee;;nee;;;2026;;0;
+1xezx8q;Assistent accountant;Zakelijke dienstverlening;Zuid-Holland;26;3.5;mbo;36;3285;;nee;;nee;;medior;2026;;0;
+1xe7vvz;Business Analyst;Zakelijke dienstverlening;Utrecht;25;1;hbo;40;3400;;nee;;nee;;junior;2026;;0;
+1xe7146;Projectleider elektrotechniek;Bouw;Utrecht;43;27;hbo;40;5225;;nee;;ja;;senior;2026;;1.7;
+1xdpehg;Manager Technische Dienst;Industrie;Noord-Brabant;41;22;mbo;40;13300;;nee;;;;;2026;;;
+1xd9bov;Sales manager;Zakelijke dienstverlening;Zuid-Holland;29;10;hbo;40;5500;;nee;;ja;;;2026;;0;100
+1xd8ut8;Programma Management Officer;Financiële dienstverlening;Groningen;33;5;wo;38;4500;8.3;ja;7.5;nee;;junior;2026;10.4;0;68
+1xcc9b4;Financieel Analist;Industrie;;22;2;hbo;40;4200;;nee;;nee;;;2026;;20;
+1xakbrb;Project Engineer;Industrie;Gelderland;28;6;hbo;40;4350;;nee;;nee;Metalektro;medior;2026;;;
+1xa2xzx;Marketing & Communicatie specialist;ICT;Utrecht;36;10;hbo;36;4725;8;;;nee;;medior;2026;;0;70
+1x9xkjy;Informatieanalist;ICT;Noord-Holland;24;4;wo;40;3500;;ja;;ja;;medior;2026;;0;
+1x9t4th;IT Audit Manager;Industrie;Noord-Holland;36;14;hbo;40;7968;;nee;;nee;;senior;2026;;0;85
+1x9oj44;Coördinator Employee Services;Zakelijke dienstverlening;;25;0;onbekend;40;3150;;;;ja;;;2026;;0;
+1x6vls8;Recruitmentmanager;Bouw;Utrecht;36;15;onbekend;40;6100;;nee;;ja;;senior;2026;;;
+1x6ufv5;Verzekeringsadviseur;Financiële dienstverlening;Noord-Brabant;27;3;hbo;40;3400;;nee;;nee;;;2026;;;
+1x632ko;Mechanical engineer;Industrie;;25;2;hbo;40;3500;;nee;;nee;Metalektro;junior;2026;;0;
+1x5rtn5;Technisch tekenaar / werkvoorbereider;Bouw;Overijssel;21;4;mbo;40;2750;;nee;;nee;;junior;2026;;1.1;
+1x5llam;Operations manager hotel;Horeca;Noord-Holland;36;15;onbekend;38;3500;;nee;;nee;;;2026;;0;50
+1x5a4rt;BIM Coördinator;Overheid;Noord-Holland;26;7;hbo;40;6000;;ja;;nee;;;2026;21;;70
+1x3vcel;Senior Consultant Digital Manufacturing;Zakelijke dienstverlening;Utrecht;32;8;wo;40;5900;;ja;;nee;;senior;2026;;;
+1x2on99;Software Engineer;ICT;Noord-Holland;33;10;hbo;40;8370;;nee;;nee;;senior;2026;;10;
+1x2fzun;Site Manager logistiek;Transport en logistiek;Utrecht;31;6;wo;40;7100;;nee;;ja;;;2026;;12.5;67
+1x2dnxn;Manufacturing Engineer;Industrie;Zuid-Holland;30;5;wo;38;5000;;ja;;nee;;medior;2026;;5.5;100
+1x29rr3;HSE auditor / adviseur;Industrie;Utrecht;62;42;onbekend;40;8800;;nee;;ja;;senior;2026;;12;
+1x1wfx2;Mechanical engineer;Industrie;Utrecht;36;10;mbo;40;5200;;ja;;nee;;;2026;;;
+1x1o8g9;Functioneel beheerder;Zorg en welzijn;Noord-Brabant;34;10;mbo;28;2794;;ja;;nee;;;2026;;0;
+1x1h6v6;Werkvoorbereider;Bouw;Zuid-Holland;35;3;mbo;40;3108;;ja;;nee;;;2026;;0;
+1x1gbyk;Operationeel Directeur hotels;Horeca;;29;10;hbo;40;6500;;nee;;ja;;senior;2026;;8.3;0
+1x0xias;Plaatwerker;Industrie;Noord-Brabant;26;7;mbo;40;3400;;nee;;nee;Kleinmetaal;;2026;;0;
+1x0pl63;Werkvoorbereider / Calculator;Bouw;Utrecht;26;6;mbo;42;3713;;nee;;ja;Kleinmetaal;senior;2026;;;
+1x09is2;Projectleider vastgoed;Zakelijke dienstverlening;;35;8;mbo;40;6250;;ja;;nee;;senior;2026;;;
+1wzqgr5;Cloud Engineer;ICT;;27;1.5;wo;36;4000;;nee;;nee;;medior;2026;;0;88
+1wzdurj;IT Support engineer;ICT;Noord-Brabant;23;0.5;hbo;40;3000;;nee;;nee;;junior;2026;;0;
+1wz3ers;CISO;Financiële dienstverlening;;36;15;hbo;28;8300;;nee;;nee;;senior;2026;;12;72
+1wz2jov;System Administrator;ICT;Zuid-Holland;30;1.5;mbo;40;2670;;;;nee;;junior;2026;;0;
+1wywv2x;IT Field Engineer;ICT;Utrecht;21;3;mbo;40;3200;;nee;;ja;;junior;2026;;0;
+1wyvc74;Data engineer;Overheid;;30;7;mbo;36;5100;;ja;;nee;;medior;2026;;0;
+1wyhs1u;Online Marketeer;Zakelijke dienstverlening;Gelderland;25;3;hbo;40;3850;;nee;;nee;;medior;2026;;7.5;100
+1wyei9b;Software developer;ICT;Zuid-Holland;24;1.5;hbo;36;2900;;nee;;nee;;junior;2026;;0;
+1wy858s;Implementatieconsultant;ICT;Noord-Brabant;35;7;hbo;40;5150;;nee;;nee;;medior;2026;;0;
+1wy7zve;Archivaris / onderzoeker;Overheid;;42;20;wo;36;5575;;ja;;nee;;senior;2026;18.5;0;67
+1wy3y85;Senior Treasury Analyst;Financiële dienstverlening;Noord-Holland;28;5;onbekend;40;7360;;nee;;nee;;senior;2026;;20;
+1wy2ehv;Supervisor Aviation Security;Transport en logistiek;Noord-Brabant;33;7;onbekend;40;3800;;nee;;ja;;;2026;;0;
+1wxh60g;Data Analyst;Financiële dienstverlening;;30;7;wo;40;6412;8;ja;5.5;nee;;senior;2026;10;0;80
+1wvnvye;Onderhoudsmonteur;Bouw;;24;3;mbo;40;3263;;nee;;nee;;junior;2026;;0;
+1wvmt92;E&I technicus;Industrie;Noord-Holland;34;9;mbo;36;5562;;nee;;nee;;senior;2026;;0;70
+1wv8hmi;Adviseur;Cultuur en recreatie;Noord-Holland;23;2.5;hbo;36;4500;;ja;;nee;;medior;2026;;;
+1wv7rd7;Scientist;Industrie;Noord-Holland;31;6.5;wo;40;5500;;ja;;nee;;medior;2026;;10;
+1wv3ddn;Integration engineer;Industrie;Noord-Brabant;27;2.5;wo;40;3850;;nee;;nee;;junior;2026;;;
+1wuu46o;Cost Engineer;Energie;Gelderland;36;10;hbo;38;6235;;ja;;nee;;medior;2026;18;0;70
+1wuafw7;Senior Support Engineer;ICT;Groningen;32;5;mbo;36;3416.56;;nee;;ja;;senior;2026;;0;
+1wu7qvh;Workplace engineer;ICT;Zuid-Holland;28;6.5;mbo;40;3150;;nee;;ja;;medior;2026;;;
+1wu7bcs;Data Engineer;ICT;Zuid-Holland;39;10;wo;40;6000;;nee;;ja;;senior;2026;;0;
+1wu6an4;IT Engineer;ICT;;26;4;mbo;32;2550;8;nee;;ja;;;2026;;0;67
+1wu2a90;Manager IT development;Handel;;35;12;wo;40;6800;;nee;;ja;;;2026;;8.3;67
+1wtz9vg;Beleidsadviseur Rijksoverheid;Overheid;Zuid-Holland;28;4.5;wo;36;5769.16;;ja;;nee;Rijk;senior;2026;16.5;0;
+1wtv3al;Coördinator Bouw en Techniek;Financiële dienstverlening;Utrecht;33;2;hbo;38;4950;;ja;;nee;;medior;2026;;0;
+1wt7rb8;HR Administrator;Zakelijke dienstverlening;Zuid-Holland;28;0.75;hbo;36;2700;;ja;;nee;;junior;2026;;9;

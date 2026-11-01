@@ -42,7 +42,7 @@ npm run dev
 npm test               # unit tests (PII-detectie, verificatie, token, seed-import)
 ```
 
-Database: voer `supabase/migrations/0001_init.sql` uit in de SQL-editor van Supabase, of gebruik `supabase db push`.
+Database: voer de migraties in `supabase/migrations/` op volgorde uit (0001, 0002, …) in de SQL-editor van Supabase, of gebruik `supabase db push`.
 
 ## Startdata (je eigen salarisdataset)
 
