@@ -37,6 +37,17 @@ function ocrDigits(s: string) {
 }
 
 /**
+ * KvK-, loonheffingen-/RSIN- en personeelsnummers staan op vrijwel elke strook en
+ * halen met één OCR-fout makkelijk de 11-proef (KvK 30124927 + "|" → 301249271).
+ * Een nummer direct na zo'n label is geen BSN.
+ */
+const EMPLOYER_LABEL = /(?:k\.?\s?v\.?\s?k\.?|kamer van koophandel|loonheffingen?\s?(?:nummer|nr\.?)|lh\s?nr\.?|rsin|personeels\s?(?:nummer|nr\.?)|werknemers\s?(?:nummer|nr\.?)|pers\.?\s?nr\.?)\s*[:.#]?\s*$/i;
+function isEmployerNumber(text: string, index: number): boolean {
+  const before = text.slice(Math.max(0, index - 40), index).split(/\n/).pop() ?? "";
+  return EMPLOYER_LABEL.test(before);
+}
+
+/**
  * Zoekt BSN- en IBAN-achtige reeksen. `strict` = alleen gevalideerde matches
  * (11-proef / mod-97); niet-strict meldt ook NL-IBAN-patronen die door OCR-
  * ruis de checksum niet halen.
@@ -48,6 +59,12 @@ export function findBsnIban(text: string, { strict = false } = {}): PiiHit[] {
   const bsnRe = /(?<![\dA-Za-z])([\dOoIl|SB]{2,4}[ .\-]?[\dOoIl|SB]{2,4}[ .\-]?[\dOoIl|SB]{1,4})(?![\dA-Za-z])/g;
   for (const m of text.matchAll(bsnRe)) {
     const candidate = ocrDigits(m[1]).replace(/[ .\-]/g, "");
+    // Elke los geschreven groep moet een echt cijfer bevatten (een tabelrand "|"
+    // of losse "l" is geen cijfer), en minstens 7 van de 9 tekens zijn echte cijfers.
+    const groups = m[1].split(/[ .\-]/);
+    const realDigits = m[1].replace(/\D/g, "").length;
+    if (groups.some((g) => !/\d/.test(g)) || realDigits < 7) continue;
+    if (isEmployerNumber(text, m.index ?? 0)) continue;
     if (/^\d{9}$/.test(candidate) && isValidBsn(candidate)) {
       // Bedragen als "123.456.789" zijn op een strook vrijwel uitgesloten; tel mee.
       hits.push({ type: "bsn", match: m[1], index: m.index ?? 0 });

@@ -96,3 +96,24 @@ describe("label-gebaseerde detectie (OCR mist een cijfer)", () => {
     expect(findBsnIban("Uitbetaald op rekening —— Reservering vakantiegeld 8% 360,00")).toEqual([]);
   });
 });
+
+describe("geen valse BSN's op werkgeversnummers en tabelranden", () => {
+  it("KvK-nummer met OCR-ruis (tabelrand) is geen BSN", () => {
+    // 301249271 haalt de 11-proef: KvK 30124927 + een "|" die OCR als 1 leest.
+    expect(findBsnIban("K.v.K. 30124927 |")).toEqual([]);
+    expect(findBsnIban("KvK 30124927 1")).toEqual([]);
+    expect(findBsnIban("Personeelsnummer 301249271")).toEqual([]);
+    expect(findBsnIban("Loonheffingennummer: 111222333")).toEqual([]);
+  });
+  it("losse | of l telt niet als cijfergroep", () => {
+    expect(findBsnIban("30124927 |")).toEqual([]);
+  });
+  it("cijfers op verschillende regels worden niet aan elkaar geplakt", () => {
+    expect(findBsnIban("Datum 30124927\n1 Uur")).toEqual([]);
+  });
+  it("een echt BSN wordt nog steeds gevonden", () => {
+    expect(findBsnIban("BSN 111222333").map((h) => h.type)).toEqual(["bsn"]);
+    expect(findBsnIban("111 222 333").map((h) => h.type)).toEqual(["bsn"]);
+    expect(findBsnIban("BSN\n111222333").map((h) => h.type)).toContain("bsn");
+  });
+});

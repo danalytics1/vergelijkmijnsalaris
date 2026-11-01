@@ -65,7 +65,12 @@ export default function UploadFlow() {
       const total = results.reduce((n, r) => n + r.length, 0);
       if (total > 0) {
         setScanOk(false);
-        setError(`We zien nog ${total} leesbaar BSN- of IBAN-nummer${total > 1 ? "s" : ""} (rood omlijnd). Maak deze zwart en controleer opnieuw.`);
+        const unlocated = results.flat().filter((h) => h.box.w === 0).map((h) => `"${h.match}"`);
+        setError(
+          unlocated.length
+            ? `We lezen nog ${total} BSN- of IBAN-achtig nummer${total > 1 ? "s" : ""}, maar kunnen ${unlocated.length > 1 ? "ze" : "het"} niet precies aanwijzen: ${unlocated.join(", ")}. Zoek dit nummer op je strook, maak het zwart en controleer opnieuw.`
+            : `We zien nog ${total} leesbaar BSN- of IBAN-nummer${total > 1 ? "s" : ""} (rood omlijnd). Maak deze zwart en controleer opnieuw.`,
+        );
       } else {
         setScanOk(true);
       }
