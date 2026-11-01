@@ -71,3 +71,17 @@ describe("llmProvider", () => {
     if (old === undefined) delete process.env.LLM_PROVIDER; else process.env.LLM_PROVIDER = old;
   });
 });
+
+import { BedrockExtractor } from "@/lib/llm/bedrock";
+
+describe("BedrockExtractor EU-bewaking", () => {
+  it("weigert een niet-EU inference profile voordat er iets verstuurd wordt", async () => {
+    const old = { ...process.env };
+    process.env.BEDROCK_REGION = "eu-central-1";
+    process.env.BEDROCK_MODEL_ID = "us.anthropic.claude-sonnet-4-5-20250929-v1:0";
+    await expect(new BedrockExtractor().extract([])).rejects.toMatchObject({ code: "non_eu_model_profile" });
+    process.env.BEDROCK_REGION = "us-east-1";
+    await expect(new BedrockExtractor().extract([])).rejects.toMatchObject({ code: "non_eu_region" });
+    process.env = old;
+  });
+});

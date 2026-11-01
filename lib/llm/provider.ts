@@ -31,7 +31,7 @@ export function llmInfo(): LlmInfo {
       return {
         provider: "bedrock",
         euOnly: true,
-        processor: "Amazon Web Services (AWS Bedrock, Frankfurt): AI-analyse. Bedrock bewaart je invoer niet en gebruikt die niet voor training.",
+        processor: "Amazon Web Services (AWS Bedrock, datacenters in de EU): AI-analyse. Bedrock bewaart je invoer niet en gebruikt die niet voor training.",
       };
     default:
       return {
