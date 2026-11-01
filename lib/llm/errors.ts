@@ -49,17 +49,28 @@ function redact(s: string): string {
     .slice(0, MAX_DETAIL);
 }
 
+const AWS_SAFE_MESSAGE = new Set([
+  "AccessDeniedException",
+  "UnrecognizedClientException",
+  "ResourceNotFoundException",
+  "ExpiredTokenException",
+  "InvalidSignatureException",
+]);
+
 /** Eén logregel zonder documentinhoud, voor gebruik in console.error. */
 export function describeLlmError(e: unknown): string {
   if (e instanceof LlmError) {
     return `provider=${e.provider} status=${e.status ?? "-"} code=${e.code}${e.detail ? ` detail="${e.detail}"` : ""}`;
   }
   if (e && typeof e === "object") {
-    const err = e as { name?: unknown; $metadata?: { httpStatusCode?: unknown } };
+    const err = e as { name?: unknown; message?: unknown; $metadata?: { httpStatusCode?: unknown } };
     const name = typeof err.name === "string" ? err.name : "Error";
     const status = typeof err.$metadata?.httpStatusCode === "number" ? err.$metadata.httpStatusCode : "-";
-    // Bewust geen e.message: kan bij parse-fouten modeloutput bevatten.
-    return `name=${name} status=${status}`;
+    // Alleen bij AWS-autorisatie/configuratiefouten de (geredigeerde) melding: die
+    // gaat over rechten en model-ID's, niet over de documentinhoud. Bij andere
+    // fouten bewust geen e.message: kan modeloutput bevatten.
+    const detail = AWS_SAFE_MESSAGE.has(name) && typeof err.message === "string" ? ` detail="${redact(err.message)}"` : "";
+    return `name=${name} status=${status}${detail}`;
   }
   return "name=unknown";
 }
