@@ -1,22 +1,22 @@
 # VergelijkMijnSalaris
 
 Salarisvergelijker in de stijl van vergelijkmijnofferte.nl. Wie wil vergelijken, moet een salarisstrook uploaden.
-Claude (via AWS Bedrock in Frankfurt) of Mistral leest de strook uit en controleert of hij echt is.
+Mistral (EU) of Claude via AWS Bedrock (Frankfurt) leest de strook uit en controleert of hij echt is.
 De gebruiker controleert daarna een vooringevuld formulier en ziet waar hij staat ten opzichte van vergelijkbare banen.
 
-**Stack:** Next.js 15 (App Router) op Vercel `fra1` · Supabase (Frankfurt) · AWS Bedrock `eu-central-1` (of Mistral) · Tailwind 4.
+**Stack:** Next.js 15 (App Router) op Vercel `fra1` · Supabase (Frankfurt) · Mistral (EU, standaard) of AWS Bedrock `eu-central-1` · Tailwind 4.
 
 ## Flow & privacy-architectuur
 
 ```
-Browser                                           Server (Vercel fra1)               Bedrock (Frankfurt)
-───────                                           ────────────────────               ───────────────────
+Browser                                           Server (Vercel fra1)               Mistral (EU)
+───────                                           ────────────────────               ────────────
 1. PDF → pdf.js → afbeelding (PDF blijft lokaal)
    screenshot → canvas (EXIF weg)
 2. Gebruiker trekt zwarte balken (verplicht)
 3. Tesseract-OCR (WASM, lokaal) zoekt BSN/IBAN
    → gevonden? blokkeren.
-4. Afgeschermde JPEG ───────────────────────────▶ /api/analyse (alleen in geheugen) ──▶ Claude: uitlezen + echtheid
+4. Afgeschermde JPEG ───────────────────────────▶ /api/analyse (alleen in geheugen) ──▶ LLM: uitlezen + echtheid
                                                   · LLM zegt BSN/IBAN zichtbaar? → weg
                                                   · regex-scrub van output
                                                   · rekenchecks + score
@@ -59,7 +59,8 @@ Ongeldige rijen worden gerapporteerd en overgeslagen. `data/` staat in `.gitigno
 
 - [ ] **Juridische toets van de BSN-verwerking (art. 46 UAVG)** en de DPIA (`docs/DPIA-concept.md`) door een privacyjurist.
 - [ ] Verwerkersovereenkomsten met AWS, Vercel, Supabase en Upstash. Alle projecten in een EU-regio.
-- [ ] AWS Bedrock: **Model invocation logging UIT**, toegang tot het model aangevraagd in `eu-central-1` en een IAM-user met alleen `bedrock:InvokeModel`.
+- [ ] Mistral: **zero data retention** aangevraagd en goedgekeurd in La Plateforme, `LLM_PROVIDER=mistral` en `MISTRAL_API_KEY` gezet.
+- [ ] (Alleen bij `LLM_PROVIDER=bedrock`) AWS Bedrock: **Model invocation logging UIT**, toegang tot het model aangevraagd in `eu-central-1` en een IAM-user met alleen `bedrock:InvokeModel`.
 - [ ] Vercel: function region `fra1` (staat in `vercel.json`) en de log drains beoordelen.
 - [ ] `TOKEN_SECRET` minimaal 32 random tekens. Upstash Redis instellen voor rate limiting; de in-memory fallback is alleen voor dev.
 - [ ] Bedrijfsgegevens invullen in `app/privacy/page.tsx`.
@@ -69,6 +70,6 @@ Ongeldige rijen worden gerapporteerd en overgeslagen. `data/` staat in `.gitigno
 ## Bekende beperkingen
 
 - **Een vastberaden fraudeur komt erdoor.** De echtheidscheck vangt slordige nepstroken (rekenfouten, Word/Canva-PDF's, onlogische loonheffing). Een goed gemaakte nepstrook herkent hij niet.
-- **De `masked=true`-vlag komt van de client.** Een aangepaste client kan de OCR-stap overslaan. Dan blijven de LLM-check en de scrub als vangnet over. Het BSN is in dat geval wel kort bij Bedrock geweest, maar wordt niet opgeslagen.
+- **De `masked=true`-vlag komt van de client.** Een aangepaste client kan de OCR-stap overslaan. Dan blijven de LLM-check en de scrub als vangnet over. Het BSN is in dat geval wel kort bij de LLM-provider geweest, maar wordt niet opgeslagen.
 - **OCR is niet perfect,** zeker niet op wazige foto's. Daarom zijn er meerdere lagen en bevestigt de gebruiker zelf dat het BSN en IBAN onleesbaar zijn.
 - **De dubbele-upload-check werkt op een hash van de afgeschermde afbeelding.** Wie anders afschermt, krijgt een nieuwe hash.
