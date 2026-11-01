@@ -24,6 +24,11 @@ describe("seed import", () => {
       expect(r.row.dertiende_maand).toBe(true);
     }
   });
+  it("gebruikt expliciete senioriteit boven afleiding uit de titel", () => {
+    const m = { ...mapping, columns: { ...mapping.columns, seniority: "Sen" } };
+    const r = mapRow({ Functie: "Developer", Sector: "IT", Leeftijd: "30", Uren: "40", Bruto: "4000", Jaar: "2026", Sen: "Medior" }, m);
+    expect(r.ok && r.row.seniority).toBe("medior");
+  });
   it("keurt ongeldige rijen af", () => {
     const r = mapRow({ Functie: "x", Sector: "Onbekend", Leeftijd: "200", Uren: "40", Bruto: "10", Jaar: "2026" }, mapping);
     expect(r.ok).toBe(false);

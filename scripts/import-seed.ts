@@ -95,7 +95,7 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
       counts_in_stats: true,
       functie: functie!,
       functie_key: functieKey(functie!),
-      seniority: seniority(functie!),
+      seniority: (["junior", "medior", "senior"] as const).find((x) => x === get("seniority")?.toLowerCase()) ?? seniority(functie!),
       sector: sector!,
       provincie,
       leeftijdsband: leeftijdsband(leeftijd!),

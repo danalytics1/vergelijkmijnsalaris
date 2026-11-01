@@ -1,0 +1,22 @@
+{
+  "_uitleg": "Mapping voor nlsalaris-reddit-2026.csv: 72 salarisposts uit r/NLSalaris (sep-okt 2026), handmatig gestructureerd. Bruto = basissalaris per maand, zonder vakantiegeld, IKB, 13e maand, ORT en bonus. post_id wordt niet geïmporteerd en dient alleen om terug te vinden welke post het was.",
+  "delimiter": ";",
+  "decimal": ".",
+  "columns": {
+    "functie": "Functie",
+    "sector": "Sector",
+    "provincie": "Provincie",
+    "leeftijd": "Leeftijd",
+    "dienstjaren": "Ervaring",
+    "opleidingsniveau": "Opleiding",
+    "uren_per_week": "Uren",
+    "bruto_maand": "Bruto maandsalaris",
+    "vakantiegeld_pct": "Vakantiegeld",
+    "dertiende_maand": "13e maand",
+    "pensioen_pct": "Pensioen werknemer",
+    "lease_auto": "Leaseauto",
+    "cao": "Cao",
+    "seniority": "Senioriteit",
+    "jaar": "Jaar"
+  }
+}
