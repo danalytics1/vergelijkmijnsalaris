@@ -12,7 +12,7 @@ type Step = "upload" | "mask" | "analysing" | "form";
 
 const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp";
 
-export default function UploadFlow() {
+export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("upload");
   const [consent, setConsent] = useState(false);
@@ -154,7 +154,7 @@ export default function UploadFlow() {
           <label className="flex gap-3 items-start text-sm">
             <input type="checkbox" className="mt-1 h-4 w-4" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
             <span>
-              Ik geef toestemming dat mijn afgeschermde salarisstrook eenmalig door een AI-model in de EU wordt geanalyseerd. De strook wordt
+              Ik geef toestemming dat mijn afgeschermde salarisstrook eenmalig door een AI-model {euOnly ? "in de EU" : "buiten de EU (Verenigde Staten)"} wordt geanalyseerd. De strook wordt
               niet opgeslagen. Alleen de geanonimiseerde salarisgegevens die ik hierna bevestig, worden bewaard. Zie de{" "}
               <a href="/privacy" target="_blank" className="text-brand-600 underline">privacyverklaring</a>.
             </span>

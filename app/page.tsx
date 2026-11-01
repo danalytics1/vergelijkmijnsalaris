@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { llmInfo } from "@/lib/llm/provider";
 
 const STAPPEN = [
   { n: 1, t: "Upload je salarisstrook", d: "PDF of screenshot. Je schermt BSN en IBAN af in je browser. Die gegevens verlaten je apparaat nooit." },
@@ -6,11 +7,13 @@ const STAPPEN = [
   { n: 3, t: "Zie waar je staat", d: "Direct inzicht: verdien je meer of minder dan vergelijkbare collega's in jouw functie, sector en regio?" },
 ];
 
+const EU = llmInfo().euOnly;
+
 const USPS = [
   { t: "100% anoniem", d: "Geen account, geen naam, geen adres. We bewaren je strook niet." },
   { t: "Echte salarissen", d: "Elke vergelijking is gebaseerd op gecontroleerde salarisstroken, geen schattingen." },
   { t: "Gratis", d: "Vergelijken kost niets en je zit nergens aan vast." },
-  { t: "AVG-proof", d: "Verwerking alleen in de EU, dataminimalisatie en het recht om je gegevens te laten verwijderen." },
+  { t: "AVG-proof", d: EU ? "Verwerking alleen in de EU, dataminimalisatie en het recht om je gegevens te laten verwijderen." : "Dataminimalisatie, geen opslag van je strook en het recht om je gegevens te laten verwijderen." },
 ];
 
 export default function Home() {
@@ -30,7 +33,7 @@ export default function Home() {
             <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-100">
               <li>✓ Geen account nodig</li>
               <li>✓ Strook wordt niet opgeslagen</li>
-              <li>✓ Verwerking in de EU</li>
+              {EU && <li>✓ Verwerking in de EU</li>}
             </ul>
           </div>
           <div className="card text-slate-800">

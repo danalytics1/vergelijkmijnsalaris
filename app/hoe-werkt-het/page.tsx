@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Prose from "@/components/Prose";
+import { llmInfo } from "@/lib/llm/provider";
 export const metadata = { title: "Hoe werkt het – VergelijkMijnSalaris" };
 export default function Page() {
   return (
@@ -14,7 +15,7 @@ export default function Page() {
       </p>
       <h2>3. AI leest je strook uit</h2>
       <p>
-        Een AI-model in de EU leest de salarisgegevens uit en controleert of het om een echte strook gaat. Het kijkt daarbij onder andere of bruto, inhoudingen en
+        Een AI-model {llmInfo().euOnly ? "in de EU" : "van Anthropic (Verenigde Staten)"} leest de salarisgegevens uit en controleert of het om een echte strook gaat. Het kijkt daarbij onder andere of bruto, inhoudingen en
         netto met elkaar kloppen en of de loonheffing plausibel is. Het model geeft nooit je naam, adres of werkgever terug.
       </p>
       <h2>4. Controleer en vergelijk</h2>

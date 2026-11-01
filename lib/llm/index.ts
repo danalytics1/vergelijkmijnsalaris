@@ -1,9 +1,18 @@
 import type { PayslipExtractor } from "./types";
+import { AnthropicExtractor } from "./anthropic";
 import { BedrockExtractor } from "./bedrock";
 import { MistralExtractor } from "./mistral";
+import { llmProvider } from "./provider";
 
-/** Standaard Mistral; zet LLM_PROVIDER=bedrock voor Claude via AWS Bedrock. */
+/** Kies de provider met LLM_PROVIDER: mistral (standaard) | anthropic | bedrock. */
 export function getExtractor(): PayslipExtractor {
-  return process.env.LLM_PROVIDER === "bedrock" ? new BedrockExtractor() : new MistralExtractor();
+  switch (llmProvider()) {
+    case "anthropic":
+      return new AnthropicExtractor();
+    case "bedrock":
+      return new BedrockExtractor();
+    default:
+      return new MistralExtractor();
+  }
 }
 export type { PageImage } from "./types";
