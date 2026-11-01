@@ -1,0 +1,23 @@
+{
+  "_uitleg": "Koppel kolomnamen uit jouw CSV aan de velden van VergelijkMijnSalaris. Kopieer naar seed-mapping.json en pas aan. Waarden in 'defaults' worden gebruikt als een kolom ontbreekt.",
+  "delimiter": ";",
+  "decimal": ",",
+  "columns": {
+    "functie": "Functie",
+    "sector": "Sector",
+    "provincie": "Provincie",
+    "leeftijd": "Leeftijd",
+    "dienstjaren": "Ervaring",
+    "opleidingsniveau": "Opleiding",
+    "uren_per_week": "Uren",
+    "bruto_maand": "Bruto maandsalaris",
+    "vakantiegeld_pct": "Vakantiegeld",
+    "dertiende_maand": "13e maand",
+    "pensioen_pct": null,
+    "lease_auto": "Leaseauto",
+    "cao": "Cao",
+    "jaar": "Jaar"
+  },
+  "sectorMap": { "IT": "ICT", "Zorg": "Zorg en welzijn" },
+  "defaults": { "opleidingsniveau": "onbekend", "vakantiegeld_pct": 8, "jaar": 2026 }
+}
