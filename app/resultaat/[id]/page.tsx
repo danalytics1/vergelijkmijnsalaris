@@ -50,6 +50,17 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         )}
       </div>
 
+      {cmp?.verbreed && (
+        <div className="rounded-xl bg-amber-50 ring-1 ring-amber-200 p-4 text-sm text-amber-800">
+          Er zijn nog geen 10 salarissen van mensen met dezelfde functie, sector, provincie en ervaring als jij. Om je privacy te
+          beschermen tonen we pas een vergelijking vanaf 10 salarissen. Daarom vergelijken we je met een bredere groep:{" "}
+          <strong>{cmp.level}</strong> ({cmp.stats.n} salarissen).{" "}
+          {cmp.alles
+            ? "Dit is een vergelijking met alle salarissen in onze database en zegt weinig over jouw specifieke functie. Zie het als een ruwe indicatie."
+            : "Dit is minder specifiek, dus zie het als een indicatie."}
+        </div>
+      )}
+
       {u === "1" && (
         <div className="rounded-xl bg-amber-50 ring-1 ring-amber-200 p-4 text-sm text-amber-800">
           Je gegevens tellen niet mee in de statistieken, omdat de strook niet volledig gecontroleerd kon worden of omdat je gegevens sterk hebt aangepast.
@@ -88,8 +99,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </>
       ) : (
         <div className="card text-slate-600">
-          Om je privacy te beschermen tonen we alleen vergelijkingen met minimaal 10 salarissen. Voor jouw combinatie van functie en sector zijn die er nog niet.
-          Je gegevens helpen anderen wel. Kom later terug via deze link.
+          Om je privacy te beschermen tonen we alleen vergelijkingen met minimaal 10 salarissen. Er staan op dit moment nog te weinig salarissen in onze
+          database om een vergelijking te maken, zelfs op landelijk niveau. Je gegevens helpen anderen wel. Kom later terug via deze link.
         </div>
       )}
 

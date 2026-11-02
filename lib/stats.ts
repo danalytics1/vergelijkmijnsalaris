@@ -1,5 +1,8 @@
 import "server-only";
 import { db } from "./supabase/server";
+import { cascade, type PeerKey } from "./cascade";
+
+export { cascade, type PeerKey };
 
 export type PeerStats = {
   n: number; p10: number; p25: number; p50: number; p75: number; p90: number;
@@ -7,29 +10,19 @@ export type PeerStats = {
   avg_vakantiegeld: number | null; avg_pensioen: number | null;
   histogram: { van: number; n: number }[];
 };
-
-export type PeerKey = { functie_key: string | null; sector: string | null; provincie: string | null; ervaringsband: string | null };
-
 export type Comparison = {
   level: string; // menselijke omschrijving van de peergroep
   key: PeerKey;
   stats: PeerStats;
   percentile: number | null; // 0..1
+  stap: number; // index in de cascade (0 = meest specifiek)
+  verbreed: boolean; // true als niet op het meest specifieke niveau vergeleken is
+  alles: boolean; // true als vergeleken is met alle salarissen (laatste vangnet)
 };
 
-/** Steeds bredere peergroepen; we nemen de eerste met k >= 10. */
-export function cascade(k: Required<{ [K in keyof PeerKey]: string }>): { level: string; key: PeerKey }[] {
-  return [
-    { level: "dezelfde functie, sector, provincie en ervaring", key: { ...k } },
-    { level: "dezelfde functie, sector en ervaring (heel NL)", key: { ...k, provincie: null } },
-    { level: "dezelfde functie en sector", key: { ...k, provincie: null, ervaringsband: null } },
-    { level: "dezelfde functie (alle sectoren)", key: { functie_key: k.functie_key, sector: null, provincie: null, ervaringsband: null } },
-    { level: "dezelfde sector (alle functies)", key: { functie_key: null, sector: k.sector, provincie: null, ervaringsband: null } },
-  ];
-}
-
 export async function compare(k: Parameters<typeof cascade>[0], value: number): Promise<Comparison | null> {
-  for (const step of cascade(k)) {
+  const steps = cascade(k);
+  for (const [i, step] of steps.entries()) {
     const args = {
       p_functie_key: step.key.functie_key, p_sector: step.key.sector,
       p_provincie: step.key.provincie, p_ervaringsband: step.key.ervaringsband,
@@ -39,7 +32,8 @@ export async function compare(k: Parameters<typeof cascade>[0], value: number): 
     const row = (data as PeerStats[] | null)?.[0];
     if (!row || row.n < 10) continue;
     const { data: rank } = await db().rpc("peer_rank", { ...args, p_value: value });
-    return { level: step.level, key: step.key, stats: normalize(row), percentile: rank == null ? null : Number(rank) };
+    return { level: step.level, key: step.key, stats: normalize(row), percentile: rank == null ? null : Number(rank),
+      stap: i, verbreed: i > 0, alles: i === steps.length - 1 };
   }
   return null;
 }
