@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import MaskEditor, { renderMasked } from "./MaskEditor";
 import PayslipForm, { type Prefill } from "./PayslipForm";
-import type { Box, GateHit } from "@/lib/client/piiGate";
+import type { Box, GateHit, OcrJob } from "@/lib/client/piiGate";
 import type { PdfMeta } from "@/lib/client/pdfToImage";
 
 type Page = { source: HTMLCanvasElement; masks: Box[]; hits: GateHit[] };
@@ -23,23 +23,42 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
   const [scanOk, setScanOk] = useState(false);
   const [confirmMasked, setConfirmMasked] = useState(false);
   const [analysis, setAnalysis] = useState<{ token: string; verified: boolean; prefill: Prefill } | null>(null);
+  const ocrJob = useRef<OcrJob | null>(null);
+  const [ocrProgress, setOcrProgress] = useState<number | null>(null);
+
+  // Lees de strook alvast op de achtergrond terwijl de gebruiker balken tekent.
+  async function startOcr(sources: HTMLCanvasElement[]) {
+    const { startOcr } = await import("@/lib/client/piiGate");
+    const job = startOcr(sources);
+    ocrJob.current = job;
+    job.result.catch(() => { if (ocrJob.current === job) ocrJob.current = null; });
+  }
+
+  useEffect(() => {
+    if (step !== "mask") ocrJob.current = null;
+  }, [step]);
 
   async function onFile(file: File) {
     setError(null);
     if (file.size > 20 * 1024 * 1024) return setError("Bestand is groter dan 20 MB.");
     setBusy("Bestand openen…");
+    // OCR-engine en taaldata alvast laden, parallel aan het openen van het bestand.
+    import("@/lib/client/piiGate").then((m) => m.preloadOcr()).catch(() => {});
     try {
       const { pdfToCanvases, imageToCanvas } = await import("@/lib/client/pdfToImage");
+      let sources: HTMLCanvasElement[];
       if (file.type === "application/pdf") {
         const { canvases, meta } = await pdfToCanvases(file);
         setMeta(meta);
-        setPages(canvases.map((source) => ({ source, masks: [], hits: [] })));
+        sources = canvases;
       } else if (file.type.startsWith("image/")) {
         setMeta(null);
-        setPages([{ source: await imageToCanvas(file), masks: [], hits: [] }]);
+        sources = [await imageToCanvas(file)];
       } else {
         throw new Error("type");
       }
+      setPages(sources.map((source) => ({ source, masks: [], hits: [] })));
+      void startOcr(sources);
       setScanOk(false);
       setConfirmMasked(false);
       setStep("mask");
@@ -58,9 +77,15 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
   async function scan() {
     setError(null);
     setBusy("Controleren op zichtbaar BSN/IBAN… (dit gebeurt op je eigen apparaat)");
+    let unsubscribe = () => {};
     try {
-      const { scanForBsnIban } = await import("@/lib/client/piiGate");
-      const results = await Promise.all(pages.map((p) => scanForBsnIban(renderMasked(p.source, p.masks))));
+      const { hitsOutsideMasks } = await import("@/lib/client/piiGate");
+      if (!ocrJob.current) await startOcr(pages.map((p) => p.source));
+      const job = ocrJob.current!;
+      setOcrProgress(job.progress());
+      unsubscribe = job.subscribe(() => setOcrProgress(job.progress()));
+      const ocr = await job.result;
+      const results = pages.map((p, i) => hitsOutsideMasks(ocr[i], p.masks));
       setPages((ps) => ps.map((p, i) => ({ ...p, hits: results[i] })));
       const total = results.reduce((n, r) => n + r.length, 0);
       if (total > 0) {
@@ -77,6 +102,8 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
     } catch {
       setError("De controle kon niet worden uitgevoerd in je browser. Probeer een recente versie van Chrome, Edge, Firefox of Safari.");
     } finally {
+      unsubscribe();
+      setOcrProgress(null);
       setBusy(null);
     }
   }
@@ -180,8 +207,9 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
           <div className="flex flex-wrap gap-3 items-center">
             <button className="btn-secondary" onClick={() => { setPages([]); setStep("upload"); }}>Ander bestand</button>
             <button className="btn-primary" disabled={!!busy} onClick={scan}>{busy ? "Bezig…" : "Controleren"}</button>
-            {busy && <span className="text-sm text-slate-500">{busy}</span>}
+            {busy && ocrProgress === null && <span className="text-sm text-slate-500">{busy}</span>}
           </div>
+          {busy && ocrProgress !== null && <ProgressBar value={ocrProgress} label={busy} />}
           {scanOk && (
             <div className="rounded-xl bg-green-50 ring-1 ring-green-200 p-4 space-y-3">
               <div className="text-green-800 font-medium">✓ Geen leesbaar BSN of IBAN gevonden.</div>
@@ -206,6 +234,21 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
       {step === "form" && analysis && (
         <PayslipForm prefill={analysis.prefill} verified={analysis.verified} busy={!!busy} onSubmit={submit} />
       )}
+    </div>
+  );
+}
+
+function ProgressBar({ value, label }: { value: number; label: string }) {
+  const pct = Math.round(value * 100);
+  return (
+    <div className="space-y-1">
+      <div className="flex justify-between text-sm text-slate-600">
+        <span>{label}</span>
+        <span className="tabular-nums">{pct}%</span>
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label={label}>
+        <div className="h-full rounded-full bg-brand-500 transition-[width] duration-300" style={{ width: `${pct}%` }} />
+      </div>
     </div>
   );
 }
