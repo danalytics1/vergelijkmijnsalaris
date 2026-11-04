@@ -19,7 +19,7 @@ describe("seed import", () => {
       expect(r.row.sector).toBe("ICT");
       expect(r.row.provincie).toBe("Utrecht");
       expect(r.row.bruto_maand).toBe(5400);
-      expect(r.row.bruto_maand_fte).toBe(6000);
+      expect(r.row.bruto_maand_fte).toBe(6500); // 5400/36*40 × 13/12 (13e maand)
       expect(r.row.seniority).toBe("senior");
       expect(r.row.dertiende_maand).toBe(true);
     }

@@ -77,6 +77,8 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
   const uren = num("uren_per_week");
   const bruto = num("bruto_maand");
   const jaar = num("jaar");
+  const dertiende = bool("dertiende_maand");
+  const thuis = num("thuiswerkdagen");
   const opl = ci(OPLEIDINGSNIVEAUS, get("opleidingsniveau") ?? "onbekend") ?? "onbekend";
 
   if (!functie || functie.length < 2) errors.push("functie");
@@ -85,6 +87,7 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
   if (leeftijd == null || leeftijd < 15 || leeftijd > 80) errors.push("leeftijd");
   if (uren == null || uren < 1 || uren > 60) errors.push("uren");
   if (bruto == null || bruto < 500 || bruto > 100000) errors.push("bruto_maand");
+  if (thuis != null && (thuis < 0 || thuis > 5)) errors.push("thuiswerkdagen");
   if (jaar == null || jaar < 2015 || jaar > 2100) errors.push("jaar");
   if (errors.length) return { ok: false as const, errors };
 
@@ -103,9 +106,10 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
       opleidingsniveau: opl,
       uren_per_week: uren!,
       bruto_maand: bruto!,
-      bruto_maand_fte: fulltimeEquivalent(bruto!, uren!),
+      bruto_maand_fte: fulltimeEquivalent(bruto!, uren!, dertiende === true),
       vakantiegeld_pct: num("vakantiegeld_pct"),
-      dertiende_maand: bool("dertiende_maand"),
+      dertiende_maand: dertiende,
+      thuiswerkdagen: thuis,
       pensioen_pct: num("pensioen_pct"),
       lease_auto: bool("lease_auto"),
       cao: get("cao"),

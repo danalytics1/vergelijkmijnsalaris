@@ -22,9 +22,16 @@ export function uurloon(bruto_maand: number, uren_per_week: number) {
   return round2((bruto_maand * 12) / 52 / uren_per_week);
 }
 
-/** Herleidt naar fulltime (40u) maandsalaris voor eerlijke vergelijking. */
-export function fulltimeEquivalent(bruto_maand: number, uren_per_week: number, fulltime = 40) {
-  return round2((bruto_maand / uren_per_week) * fulltime);
+/** Factor waarmee een 13e maand het maandsalaris verhoogt (13 i.p.v. 12 uitbetalingen). */
+export const DERTIENDE_FACTOR = 13 / 12;
+
+/**
+ * Herleidt naar fulltime (40u) maandsalaris voor eerlijke vergelijking.
+ * Een 13e maand wordt over het jaar uitgesmeerd (× 13/12).
+ */
+export function fulltimeEquivalent(bruto_maand: number, uren_per_week: number, dertiende_maand = false, fulltime = 40) {
+  const maand = dertiende_maand ? bruto_maand * DERTIENDE_FACTOR : bruto_maand;
+  return round2((maand / uren_per_week) * fulltime);
 }
 
 export function leeftijdsband(leeftijd: number): string {

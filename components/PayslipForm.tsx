@@ -24,6 +24,7 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
     bruto_maand: prefill.bruto_maand?.toString() ?? "",
     vakantiegeld_pct: (prefill.vakantiegeld_pct ?? 8).toString(),
     dertiende_maand: prefill.dertiende_maand ?? false,
+    thuiswerkdagen: "0",
     pensioen_pct: prefill.pensioen_pct?.toString() ?? "",
     lease_auto: prefill.lease_auto ?? false,
     cao: prefill.cao ?? "",
@@ -61,6 +62,7 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
       bruto_maand: Number(v.bruto_maand),
       vakantiegeld_pct: Number(v.vakantiegeld_pct),
       dertiende_maand: v.dertiende_maand,
+      thuiswerkdagen: Number(v.thuiswerkdagen),
       pensioen_pct: v.pensioen_pct === "" ? null : Number(v.pensioen_pct),
       lease_auto: v.lease_auto,
       cao: v.cao || null,
@@ -145,8 +147,19 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
           <label className="label">Periode strook<Tag k="periode" /></label>
           <input className="input" type="month" required value={v.periode} onChange={set("periode")} />
         </div>
+        <div>
+          <label className="label">Thuiswerkdagen per week<span className="ml-2 text-xs font-normal text-amber-600">zelf invullen</span></label>
+          <select className="input" value={v.thuiswerkdagen} onChange={set("thuiswerkdagen")}>
+            {[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((d) => (
+              <option key={d} value={String(d)}>{d === 0 ? "Geen" : `${String(d).replace(".", ",")} ${d === 1 ? "dag" : "dagen"}`}</option>
+            ))}
+          </select>
+        </div>
         <div className="flex flex-col gap-3 justify-end">
-          <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={v.dertiende_maand} onChange={set("dertiende_maand")} /> 13e maand / eindejaarsuitkering</label>
+          <div>
+            <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={v.dertiende_maand} onChange={set("dertiende_maand")} /> 13e maand / eindejaarsuitkering</label>
+            <p className="ml-6 text-xs text-slate-500">Telt mee in je salaris: we rekenen met 13/12 van je maandsalaris (+8,33%).</p>
+          </div>
           <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={v.lease_auto} onChange={set("lease_auto")} /> Leaseauto</label>
         </div>
       </fieldset>

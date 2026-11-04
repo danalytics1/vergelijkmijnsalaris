@@ -7,7 +7,7 @@ export { cascade, type PeerKey };
 export type PeerStats = {
   n: number; p10: number; p25: number; p50: number; p75: number; p90: number;
   pct_dertiende: number | null; pct_lease: number | null;
-  avg_vakantiegeld: number | null; avg_pensioen: number | null;
+  avg_vakantiegeld: number | null; avg_pensioen: number | null; avg_thuiswerkdagen: number | null;
   histogram: { van: number; n: number }[];
 };
 export type Comparison = {
@@ -42,7 +42,7 @@ function normalize(r: PeerStats): PeerStats {
   const n = (x: unknown) => (x == null ? null : Number(x));
   return {
     n: Number(r.n), p10: Number(r.p10), p25: Number(r.p25), p50: Number(r.p50), p75: Number(r.p75), p90: Number(r.p90),
-    pct_dertiende: n(r.pct_dertiende), pct_lease: n(r.pct_lease), avg_vakantiegeld: n(r.avg_vakantiegeld), avg_pensioen: n(r.avg_pensioen),
+    pct_dertiende: n(r.pct_dertiende), pct_lease: n(r.pct_lease), avg_vakantiegeld: n(r.avg_vakantiegeld), avg_pensioen: n(r.avg_pensioen), avg_thuiswerkdagen: n(r.avg_thuiswerkdagen),
     histogram: Array.isArray(r.histogram) ? r.histogram : [],
   };
 }
