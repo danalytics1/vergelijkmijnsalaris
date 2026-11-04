@@ -16,6 +16,15 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("upload");
   const [consent, setConsent] = useState(false);
+  const [consentNudge, setConsentNudge] = useState(false);
+  const consentRef = useRef<HTMLInputElement>(null);
+
+  // Upload zonder toestemming: niet stil negeren, maar wijzen op de checkbox.
+  function needConsent() {
+    setConsentNudge(true);
+    consentRef.current?.focus();
+    consentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
   const [pages, setPages] = useState<Page[]>([]);
   const [meta, setMeta] = useState<PdfMeta | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -169,22 +178,33 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
             Een PDF of een screenshot van je meest recente salarisstrook. In de volgende stap scherm je je <strong>BSN en IBAN</strong> af.
             Dat gebeurt volledig in je browser: de originele strook verlaat je apparaat niet.
           </p>
+          <div className={`rounded-xl p-4 ring-2 transition ${consent ? "bg-green-50 ring-green-300" : consentNudge ? "bg-red-50 ring-red-400" : "bg-amber-50 ring-amber-300"}`}>
+            <div className="text-sm font-semibold mb-2">
+              Stap 1: geef toestemming {consent ? <span className="text-green-700">✓</span> : <span className="text-red-600">(verplicht)</span>}
+            </div>
+            <label className="flex gap-3 items-start text-sm cursor-pointer">
+              <input ref={consentRef} type="checkbox" className="mt-1 h-5 w-5 shrink-0" checked={consent}
+                onChange={(e) => { setConsent(e.target.checked); if (e.target.checked) setConsentNudge(false); }} />
+              <span>
+                Ik geef toestemming dat mijn afgeschermde salarisstrook eenmalig door een AI-model {euOnly ? "in de EU" : "buiten de EU (Verenigde Staten)"} wordt geanalyseerd. De strook wordt
+                niet opgeslagen. Alleen de geanonimiseerde salarisgegevens die ik hierna bevestig, worden bewaard. Zie de{" "}
+                <a href="/privacy" target="_blank" className="text-brand-600 underline">privacyverklaring</a>.
+              </span>
+            </label>
+            {consentNudge && !consent && (
+              <p role="alert" className="mt-2 text-sm font-medium text-red-700">Vink eerst dit vakje aan. Daarna kun je je strook uploaden.</p>
+            )}
+          </div>
+          <div className="text-sm font-semibold">Stap 2: upload je strook</div>
           <label
+            onClick={(e) => { if (!consent) { e.preventDefault(); needConsent(); } }}
             onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f && consent && !busy) onFile(f); }}
-            className={`block rounded-2xl border-2 border-dashed p-10 text-center transition ${consent ? "border-brand-500 bg-brand-50 cursor-pointer hover:bg-brand-100" : "border-slate-300 bg-slate-50 opacity-60 cursor-not-allowed"}`}>
+            onDrop={(e) => { e.preventDefault(); if (!consent) return needConsent(); const f = e.dataTransfer.files?.[0]; if (f && !busy) onFile(f); }}
+            className={`block rounded-2xl border-2 border-dashed p-10 text-center transition ${consent ? "border-brand-500 bg-brand-50 cursor-pointer hover:bg-brand-100" : "border-slate-300 bg-slate-50 cursor-not-allowed"}`}>
             <input type="file" accept={ACCEPT} className="sr-only" disabled={!consent || !!busy} onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
-            <div className="text-4xl">📄</div>
-            <div className="mt-2 font-semibold">{busy ?? "Kies een bestand of sleep het hierheen"}</div>
+            <div className="text-4xl">{consent ? "📄" : "🔒"}</div>
+            <div className="mt-2 font-semibold">{busy ?? (consent ? "Kies een bestand of sleep het hierheen" : "Geef eerst toestemming (stap 1)")}</div>
             <div className="text-sm text-slate-500">PDF, PNG of JPG, maximaal 20 MB</div>
-          </label>
-          <label className="flex gap-3 items-start text-sm">
-            <input type="checkbox" className="mt-1 h-4 w-4" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-            <span>
-              Ik geef toestemming dat mijn afgeschermde salarisstrook eenmalig door een AI-model {euOnly ? "in de EU" : "buiten de EU (Verenigde Staten)"} wordt geanalyseerd. De strook wordt
-              niet opgeslagen. Alleen de geanonimiseerde salarisgegevens die ik hierna bevestig, worden bewaard. Zie de{" "}
-              <a href="/privacy" target="_blank" className="text-brand-600 underline">privacyverklaring</a>.
-            </span>
           </label>
         </div>
       )}

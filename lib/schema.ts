@@ -63,6 +63,7 @@ export const SubmissionSchema = z.object({
   bruto_maand: z.number().min(500).max(100000),
   vakantiegeld_pct: z.number().min(0).max(25),
   dertiende_maand: z.boolean(),
+  thuiswerkdagen: z.number().min(0).max(5).multipleOf(0.5),
   pensioen_pct: z.number().min(0).max(30).nullable(),
   lease_auto: z.boolean(),
   cao: z.string().max(100).nullable(),

@@ -11,6 +11,7 @@ export const metadata: Metadata = { title: "Jouw salarisvergelijking", robots: {
 
 const eur = (n: number) => new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
 const pct = (n: number) => `${Math.round(n * 100)}%`;
+const dagen = (n: number) => (n === 0 ? "geen" : `${n.toLocaleString("nl-NL", { maximumFractionDigits: 1 })} ${n === 1 ? "dag" : "dagen"} per week`);
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ k?: string; u?: string }> }) {
   const { id } = await params;
@@ -19,7 +20,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
   const { data: s } = await db()
     .from("submissions")
-    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, lease_auto, vakantiegeld_pct, pensioen_pct, source")
+    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, source")
     .eq("id", id)
     .eq("source", "upload")
     .maybeSingle();
@@ -73,7 +74,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <ResultChart value={fte} stats={cmp.stats} />
             <p className="mt-4 text-sm text-slate-500">
               Vergeleken met {cmp.stats.n} salarissen van mensen met {cmp.level}. Bedragen omgerekend naar fulltime (40 uur), bruto per maand,
-              exclusief vakantiegeld. Jouw salaris: {eur(Number(s.bruto_maand))} voor {Number(s.uren_per_week)} uur = {eur(fte)} fulltime.
+              inclusief een eventuele 13e maand (verdeeld over 12 maanden), exclusief vakantiegeld. Jouw salaris: {eur(Number(s.bruto_maand))}
+              {s.dertiende_maand ? " + 13e maand (× 13/12)" : ""} voor {Number(s.uren_per_week)} uur = {eur(fte)} fulltime.
             </p>
           </div>
 
@@ -90,6 +92,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
               <thead className="text-left text-slate-500"><tr><th className="pb-2">Voorwaarde</th><th className="pb-2">Jij</th><th className="pb-2">Vergelijkbaar</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
                 <tr><td className="py-2">13e maand</td><td>{s.dertiende_maand ? "Ja" : "Nee"}</td><td>{cmp.stats.pct_dertiende != null ? `${pct(cmp.stats.pct_dertiende)} heeft dit` : "–"}</td></tr>
+                <tr><td className="py-2">Thuiswerken</td><td>{s.thuiswerkdagen != null ? dagen(Number(s.thuiswerkdagen)) : "–"}</td><td>{cmp.stats.avg_thuiswerkdagen != null ? `gem. ${dagen(cmp.stats.avg_thuiswerkdagen)}` : "–"}</td></tr>
                 <tr><td className="py-2">Leaseauto</td><td>{s.lease_auto ? "Ja" : "Nee"}</td><td>{cmp.stats.pct_lease != null ? `${pct(cmp.stats.pct_lease)} heeft dit` : "–"}</td></tr>
                 <tr><td className="py-2">Vakantiegeld</td><td>{s.vakantiegeld_pct ?? "–"}%</td><td>{cmp.stats.avg_vakantiegeld != null ? `gem. ${cmp.stats.avg_vakantiegeld}%` : "–"}</td></tr>
                 <tr><td className="py-2">Pensioenpremie werknemer</td><td>{s.pensioen_pct != null ? `${s.pensioen_pct}%` : "–"}</td><td>{cmp.stats.avg_pensioen != null ? `gem. ${cmp.stats.avg_pensioen}%` : "–"}</td></tr>
