@@ -32,10 +32,10 @@ export default function Home() {
           geen persoonsgegevens opgeslagen · strook direct verwijderd
         </div>
         <h1 className="mt-6 max-w-3xl text-5xl sm:text-7xl font-bold tracking-tight leading-[0.95]">
-          Weet precies waar je salaris staat.
+          Vergelijk anoniem je salaris met die van anderen.
         </h1>
         <p className="mt-6 max-w-xl text-lg text-fg-muted">
-          Upload je strook. Wij plaatsen je in de verdeling van echte salarissen in jouw functie, sector en regio. Anoniem, gratis, in 2 minuten.
+          Upload je salarisstrook. Wij plaatsen je in de verdeling van echte salarissen in jouw functie, sector en regio. Anoniem, gratis, in 2 minuten.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/vergelijk" className="btn-primary">Upload salarisstrook →</Link>
