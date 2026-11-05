@@ -46,6 +46,7 @@ export async function POST(req: Request) {
     leeftijdsband: leeftijdsband(s.leeftijd),
     ervaringsband: ervaringsband(s.dienstjaren),
     opleidingsniveau: s.opleidingsniveau,
+    bedrijfsgrootte: s.bedrijfsgrootte === "onbekend" ? null : s.bedrijfsgrootte,
     uren_per_week: s.uren_per_week,
     bruto_maand: s.bruto_maand,
     bruto_maand_fte: fulltimeEquivalent(s.bruto_maand, s.uren_per_week, s.dertiende_maand),

@@ -14,6 +14,13 @@ export const SECTOREN = [
 
 export const OPLEIDINGSNIVEAUS = ["vmbo/mbo1", "mbo", "hbo", "wo", "onbekend"] as const;
 
+/** Aantal medewerkers bij de werkgever, als band (geen werkgeversnaam). "onbekend" wordt als null opgeslagen. */
+export const BEDRIJFSGROOTTES = ["1-9", "10-49", "50-249", "250-999", "1000+", "onbekend"] as const;
+export const BEDRIJFSGROOTTE_LABELS: Record<(typeof BEDRIJFSGROOTTES)[number], string> = {
+  "1-9": "1–9 medewerkers", "10-49": "10–49 medewerkers", "50-249": "50–249 medewerkers",
+  "250-999": "250–999 medewerkers", "1000+": "1000 of meer medewerkers", onbekend: "Weet ik niet",
+};
+
 export const SENIORITEITEN = ["junior", "medior", "senior", "lead", "manager"] as const;
 
 /** Werkplezier op een schaal van 1 (helemaal niet) tot 5 (heel veel). */
@@ -65,6 +72,7 @@ export const SubmissionSchema = z.object({
   leeftijd: z.number().int().min(15).max(80),
   dienstjaren: z.number().min(0).max(60),
   opleidingsniveau: z.enum(OPLEIDINGSNIVEAUS),
+  bedrijfsgrootte: z.enum(BEDRIJFSGROOTTES),
   uren_per_week: z.number().min(1).max(60),
   bruto_maand: z.number().min(500).max(100000),
   vakantiegeld_pct: z.number().min(0).max(25),

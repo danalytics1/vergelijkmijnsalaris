@@ -29,7 +29,7 @@ export default function Page() {
         <thead><tr><th>Gegeven</th><th>Doel</th><th>Bewaartermijn</th></tr></thead>
         <tbody>
           <tr><td>Afgeschermde afbeelding van je salarisstrook</td><td>Uitlezen en echtheidscontrole</td><td>Niet opgeslagen. Alleen tijdens de analyse in het werkgeheugen (enkele seconden).</td></tr>
-          <tr><td>Functie, sector, provincie, leeftijdscategorie, ervaringscategorie, opleidingsniveau, uren, bruto salaris, arbeidsvoorwaarden, jaar</td><td>Salarisvergelijking en statistieken</td><td>Maximaal 3 jaar, of tot je de gegevens verwijdert</td></tr>
+          <tr><td>Functie, sector, provincie, leeftijdscategorie, ervaringscategorie, opleidingsniveau, bedrijfsgrootte (aantal medewerkers als categorie), uren, bruto salaris, arbeidsvoorwaarden, jaar</td><td>Salarisvergelijking en statistieken</td><td>Maximaal 3 jaar, of tot je de gegevens verwijdert</td></tr>
           <tr><td>Hash (vingerafdruk) van de afgeschermde afbeelding</td><td>Voorkomen dat dezelfde strook vaker wordt ingediend</td><td>Gelijk aan de inzending</td></tr>
           <tr><td>Gehasht IP-adres met dagelijks wisselende sleutel</td><td>Misbruik voorkomen (rate limiting)</td><td>24 uur</td></tr>
         </tbody>

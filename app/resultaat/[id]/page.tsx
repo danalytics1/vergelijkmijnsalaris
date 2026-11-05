@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/supabase/server";
-import { compare, topFunctiesVoorVaardigheden } from "@/lib/stats";
+import { compare, topFunctiesVoorVaardigheden, medianenPerBedrijfsgrootte } from "@/lib/stats";
+import { BEDRIJFSGROOTTE_LABELS, type BEDRIJFSGROOTTES } from "@/lib/schema";
 import DeleteButton from "@/components/DeleteButton";
 import ResultChart from "@/components/ResultChart";
 
@@ -20,19 +21,20 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
   const { data: s } = await db()
     .from("submissions")
-    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, vaardigheden, source")
+    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, vaardigheden, bedrijfsgrootte, source")
     .eq("id", id)
     .eq("source", "upload")
     .maybeSingle();
   if (!s) notFound();
 
   const vaardigheden: string[] = Array.isArray(s.vaardigheden) ? s.vaardigheden : [];
-  const [cmp, topFuncties] = await Promise.all([
+  const [cmp, topFuncties, grootte] = await Promise.all([
     compare(
       { functie_key: s.functie_key, sector: s.sector, provincie: s.provincie ?? "", ervaringsband: s.ervaringsband },
       Number(s.bruto_maand_fte),
     ),
     topFunctiesVoorVaardigheden(vaardigheden, s.functie_key),
+    medianenPerBedrijfsgrootte(s.functie_key, s.sector),
   ]);
 
   const fte = Number(s.bruto_maand_fte);
@@ -108,6 +110,33 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div className="card text-fg-muted">
           Om je privacy te beschermen tonen we alleen vergelijkingen met minimaal 10 salarissen. Er staan op dit moment nog te weinig salarissen in onze
           database om een vergelijking te maken, zelfs op landelijk niveau. Je gegevens helpen anderen wel. Kom later terug via deze link.
+        </div>
+      )}
+
+      {grootte && (
+        <div className="card">
+          <h2 className="font-semibold text-lg">Salaris naar bedrijfsgrootte</h2>
+          <p className="mt-1 text-sm text-fg-subtle">
+            Mediaan per grootte van de werkgever, {grootte.niveau === "functie" ? `voor ${s.functie}` : `in de sector ${s.sector} (alle functies)`}.
+            Alleen groottes met minstens 10 salarissen.
+          </p>
+          <table className="mt-4 w-full text-sm">
+            <thead className="text-left text-fg-subtle"><tr><th className="pb-2">Werkgever</th><th className="pb-2">Mediaan</th><th className="pb-2">t.o.v. jou</th><th className="pb-2 text-right">Salarissen</th></tr></thead>
+            <tbody className="divide-y divide-line">
+              {grootte.rijen.map((g) => {
+                const eigen = g.bedrijfsgrootte === s.bedrijfsgrootte;
+                const verschil = (g.p50 - fte) / fte;
+                return (
+                  <tr key={g.bedrijfsgrootte} className={eigen ? "font-semibold" : undefined}>
+                    <td className="py-2">{BEDRIJFSGROOTTE_LABELS[g.bedrijfsgrootte as (typeof BEDRIJFSGROOTTES)[number]] ?? g.bedrijfsgrootte}{eigen && <span className="ml-2 text-xs font-normal text-lime">jouw werkgever</span>}</td>
+                    <td>{eur(g.p50)}</td>
+                    <td className={verschil >= 0 ? "text-lime" : "text-red-400"}>{verschil >= 0 ? "+" : "−"}{Math.abs(Math.round(verschil * 100))}%</td>
+                    <td className="text-right text-fg-subtle">{g.n}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
 

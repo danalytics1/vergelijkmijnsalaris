@@ -10,7 +10,7 @@
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
-import { PROVINCIES, SECTOREN, OPLEIDINGSNIVEAUS } from "../lib/schema";
+import { PROVINCIES, SECTOREN, OPLEIDINGSNIVEAUS, BEDRIJFSGROOTTES } from "../lib/schema";
 import { functieKey, seniority, leeftijdsband, ervaringsband, fulltimeEquivalent } from "../lib/normalize";
 import { findAnyPii } from "../lib/pii/detect";
 
@@ -49,6 +49,21 @@ export function parseCsv(text: string, delimiter = ","): string[][] {
 
 const ci = (list: readonly string[], v: string) => list.find((x) => x.toLowerCase() === v.trim().toLowerCase());
 
+/**
+ * Bedrijfsgrootte uit de seed: een band ("50-249") of een aantal medewerkers ("120").
+ * null = onbekend, undefined = ongeldig.
+ */
+export function bedrijfsgrootteBand(v: string): string | null | undefined {
+  const t = v.trim().toLowerCase().replace(/[–—]/g, "-").replace(/\s/g, "");
+  if (t === "onbekend") return null;
+  const band = BEDRIJFSGROOTTES.find((b) => b === t);
+  if (band) return band;
+  if (!/^\d+$/.test(t)) return undefined;
+  const n = Number(t);
+  if (n < 1) return undefined;
+  return n < 10 ? "1-9" : n < 50 ? "10-49" : n < 250 ? "50-249" : n < 1000 ? "250-999" : "1000+";
+}
+
 export function mapRow(rec: Record<string, string>, m: Mapping) {
   const get = (k: string) => {
     const col = m.columns[k];
@@ -80,6 +95,8 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
   const dertiende = bool("dertiende_maand");
   const thuis = num("thuiswerkdagen");
   const opl = ci(OPLEIDINGSNIVEAUS, get("opleidingsniveau") ?? "onbekend") ?? "onbekend";
+  const grootteRaw = get("bedrijfsgrootte");
+  const grootte = grootteRaw ? bedrijfsgrootteBand(grootteRaw) : null;
 
   if (!functie || functie.length < 2) errors.push("functie");
   if (functie && findAnyPii(functie).length) errors.push("functie bevat PII");
@@ -88,6 +105,7 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
   if (uren == null || uren < 1 || uren > 60) errors.push("uren");
   if (bruto == null || bruto < 500 || bruto > 100000) errors.push("bruto_maand");
   if (thuis != null && (thuis < 0 || thuis > 5)) errors.push("thuiswerkdagen");
+  if (grootteRaw && grootte === undefined) errors.push(`bedrijfsgrootte '${grootteRaw}'`);
   if (jaar == null || jaar < 2015 || jaar > 2100) errors.push("jaar");
   if (errors.length) return { ok: false as const, errors };
 
@@ -104,6 +122,7 @@ export function mapRow(rec: Record<string, string>, m: Mapping) {
       leeftijdsband: leeftijdsband(leeftijd!),
       ervaringsband: ervaringsband(dienstjaren),
       opleidingsniveau: opl,
+      bedrijfsgrootte: grootte ?? null,
       uren_per_week: uren!,
       bruto_maand: bruto!,
       bruto_maand_fte: fulltimeEquivalent(bruto!, uren!, dertiende === true),
