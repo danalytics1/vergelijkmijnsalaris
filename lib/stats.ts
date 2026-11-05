@@ -81,3 +81,28 @@ export async function topFunctiesVoorVaardigheden(vaardigheden: string[], eigenF
   const aanvulling = rangschikFallback(kandidaten, medianen, limit - uitData.length).map((f) => ({ ...f, bron: "indicatie" as const }));
   return [...uitData, ...aanvulling];
 }
+
+export type GrootteMediaan = { bedrijfsgrootte: string; n: number; p50: number };
+export type GrootteVergelijking = { niveau: "functie" | "sector"; rijen: GrootteMediaan[] };
+
+const GROOTTE_VOLGORDE = ["1-9", "10-49", "50-249", "250-999", "1000+"];
+
+/**
+ * Mediaan per bedrijfsgrootte. Eerst binnen de eigen functie; zijn daar minder dan 2 banden
+ * met >= 10 salarissen, dan binnen de sector. Null als ook dat niets oplevert.
+ */
+export async function medianenPerBedrijfsgrootte(functieKey: string, sector: string): Promise<GrootteVergelijking | null> {
+  const pogingen = [
+    { niveau: "functie" as const, args: { p_functie_key: functieKey, p_sector: null } },
+    { niveau: "sector" as const, args: { p_functie_key: null, p_sector: sector } },
+  ];
+  for (const p of pogingen) {
+    const { data, error } = await db().rpc("bedrijfsgrootte_medianen", { ...p.args, p_min_k: 10 });
+    if (error || !Array.isArray(data)) continue;
+    const rijen = (data as GrootteMediaan[])
+      .map((r) => ({ bedrijfsgrootte: r.bedrijfsgrootte, n: Number(r.n), p50: Number(r.p50) }))
+      .sort((a, b) => GROOTTE_VOLGORDE.indexOf(a.bedrijfsgrootte) - GROOTTE_VOLGORDE.indexOf(b.bedrijfsgrootte));
+    if (rijen.length >= 2) return { niveau: p.niveau, rijen };
+  }
+  return null;
+}

@@ -17,7 +17,7 @@ const USPS = [
 ];
 
 const NIET = ["Je salarisstrook (PDF of afbeelding)", "Naam en adres", "BSN en IBAN", "Geboortedatum", "Werkgever", "E-mailadres of account"];
-const WEL = ["Functie en sector", "Provincie", "Leeftijds- en ervaringscategorie", "Bruto salaris en uren", "Arbeidsvoorwaarden (13e maand, pensioen, …)"];
+const WEL = ["Functie en sector", "Provincie", "Bedrijfsgrootte (categorie)", "Leeftijds- en ervaringscategorie", "Bruto salaris en uren", "Arbeidsvoorwaarden (13e maand, pensioen, …)"];
 
 // Voorbeeldverdeling (illustratief); index 6 is "jij".
 const BARS = [9, 21, 38, 61, 100, 92, 78, 55, 34, 20, 9];

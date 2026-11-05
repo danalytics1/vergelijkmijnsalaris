@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseCsv, mapRow } from "@/scripts/import-seed";
+import { parseCsv, mapRow, bedrijfsgrootteBand } from "@/scripts/import-seed";
 
 const mapping = {
   delimiter: ";", decimal: "," as const,
@@ -27,5 +27,24 @@ describe("seed import", () => {
   it("keurt ongeldige rijen af", () => {
     const r = mapRow({ Functie: "x", Sector: "Onbekend", Leeftijd: "200", Uren: "40", Bruto: "10", Jaar: "2026" }, mapping);
     expect(r.ok).toBe(false);
+  });
+  it("zet bedrijfsgrootte om naar een band", () => {
+    expect(bedrijfsgrootteBand("50-249")).toBe("50-249");
+    expect(bedrijfsgrootteBand("50 – 249")).toBe("50-249");
+    expect(bedrijfsgrootteBand("1000+")).toBe("1000+");
+    expect(bedrijfsgrootteBand("9")).toBe("1-9");
+    expect(bedrijfsgrootteBand("10")).toBe("10-49");
+    expect(bedrijfsgrootteBand("249")).toBe("50-249");
+    expect(bedrijfsgrootteBand("1000")).toBe("1000+");
+    expect(bedrijfsgrootteBand("onbekend")).toBeNull();
+    expect(bedrijfsgrootteBand("groot")).toBeUndefined();
+    expect(bedrijfsgrootteBand("0")).toBeUndefined();
+  });
+  it("keurt een rij met ongeldige bedrijfsgrootte af", () => {
+    const m = { ...mapping, columns: { ...mapping.columns, bedrijfsgrootte: "Grootte" } };
+    const r = mapRow({ Functie: "Developer", Sector: "IT", Provincie: "utrecht", Leeftijd: "35", Ervaring: "7", Uren: "40", Bruto: "5000", Jaar: "2026", Grootte: "groot" }, m);
+    expect(r.ok).toBe(false);
+    const ok = mapRow({ Functie: "Developer", Sector: "IT", Provincie: "utrecht", Leeftijd: "35", Ervaring: "7", Uren: "40", Bruto: "5000", Jaar: "2026", Grootte: "120" }, m);
+    expect(ok.ok && ok.row.bedrijfsgrootte).toBe("50-249");
   });
 });

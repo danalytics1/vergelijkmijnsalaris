@@ -16,7 +16,7 @@ describe("fulltimeEquivalent", () => {
 describe("SubmissionSchema thuiswerkdagen", () => {
   const base = {
     functie: "Developer", sector: "ICT", provincie: "Utrecht", leeftijd: 30, dienstjaren: 5,
-    opleidingsniveau: "hbo", uren_per_week: 40, bruto_maand: 4000, vakantiegeld_pct: 8,
+    opleidingsniveau: "hbo", bedrijfsgrootte: "50-249", uren_per_week: 40, bruto_maand: 4000, vakantiegeld_pct: 8,
     dertiende_maand: false, pensioen_pct: null, lease_auto: false, cao: null, periode: "2026-10",
     werkplezier: 4, senioriteit: "medior", vaardigheden: ["Python", "Analytisch", "CFA"],
   };
@@ -32,7 +32,7 @@ describe("SubmissionSchema thuiswerkdagen", () => {
 describe("SubmissionSchema werkplezier, senioriteit, vaardigheden", () => {
   const base = {
     functie: "Developer", sector: "ICT", provincie: "Utrecht", leeftijd: 30, dienstjaren: 5,
-    opleidingsniveau: "hbo", uren_per_week: 40, bruto_maand: 4000, vakantiegeld_pct: 8,
+    opleidingsniveau: "hbo", bedrijfsgrootte: "50-249", uren_per_week: 40, bruto_maand: 4000, vakantiegeld_pct: 8,
     dertiende_maand: false, thuiswerkdagen: 2, pensioen_pct: null, lease_auto: false, cao: null, periode: "2026-10",
     werkplezier: 4, senioriteit: "senior", vaardigheden: ["C#", "Wft Basis", "Sociaal"],
   };
@@ -55,5 +55,20 @@ describe("SubmissionSchema werkplezier, senioriteit, vaardigheden", () => {
     expect(ok({ vaardigheden: ["Python", "SQL", "R", "Go"] })).toBe(false);
     expect(ok({ vaardigheden: ["Mijn naam is Jan"] })).toBe(false);
     expect(ok({ vaardigheden: ["Python", "Python"] })).toBe(false);
+  });
+});
+
+describe("SubmissionSchema bedrijfsgrootte", () => {
+  const base = {
+    functie: "Developer", sector: "ICT", provincie: "Utrecht", leeftijd: 30, dienstjaren: 5,
+    opleidingsniveau: "hbo", uren_per_week: 40, bruto_maand: 4000, vakantiegeld_pct: 8,
+    dertiende_maand: false, thuiswerkdagen: 2, werkplezier: 4, senioriteit: "medior",
+    vaardigheden: ["Python"], pensioen_pct: null, lease_auto: false, cao: null, periode: "2026-10",
+  };
+  it("accepteert banden en 'onbekend', weigert de rest", () => {
+    expect(SubmissionSchema.safeParse({ ...base, bedrijfsgrootte: "1000+" }).success).toBe(true);
+    expect(SubmissionSchema.safeParse({ ...base, bedrijfsgrootte: "onbekend" }).success).toBe(true);
+    expect(SubmissionSchema.safeParse({ ...base, bedrijfsgrootte: "Philips" }).success).toBe(false);
+    expect(SubmissionSchema.safeParse(base).success).toBe(false);
   });
 });

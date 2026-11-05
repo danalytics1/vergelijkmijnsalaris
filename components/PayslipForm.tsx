@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PROVINCIES, SECTOREN, OPLEIDINGSNIVEAUS, SENIORITEITEN, WERKPLEZIER_LABELS } from "@/lib/schema";
+import { PROVINCIES, SECTOREN, OPLEIDINGSNIVEAUS, SENIORITEITEN, WERKPLEZIER_LABELS, BEDRIJFSGROOTTES, BEDRIJFSGROOTTE_LABELS } from "@/lib/schema";
 import { seniority } from "@/lib/normalize";
 import VaardighedenPicker from "./VaardighedenPicker";
 
@@ -22,6 +22,7 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
     leeftijd: prefill.leeftijd?.toString() ?? "",
     dienstjaren: prefill.dienstjaren?.toString() ?? "",
     opleidingsniveau: "onbekend",
+    bedrijfsgrootte: "",
     uren_per_week: prefill.uren_per_week?.toString() ?? "",
     bruto_maand: prefill.bruto_maand?.toString() ?? "",
     vakantiegeld_pct: (prefill.vakantiegeld_pct ?? 8).toString(),
@@ -66,6 +67,7 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
       leeftijd: Number(v.leeftijd),
       dienstjaren: Number(v.dienstjaren),
       opleidingsniveau: v.opleidingsniveau,
+      bedrijfsgrootte: v.bedrijfsgrootte,
       uren_per_week: Number(v.uren_per_week),
       bruto_maand: Number(v.bruto_maand),
       vakantiegeld_pct: Number(v.vakantiegeld_pct),
@@ -189,6 +191,14 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
             </select>
           </div>
           <div>
+            <label className="label">Grootte van je werkgever</label>
+            <select className="input" required value={v.bedrijfsgrootte} onChange={set("bedrijfsgrootte")}>
+              <option value="">Kies…</option>
+              {BEDRIJFSGROOTTES.map((s) => <option key={s} value={s}>{BEDRIJFSGROOTTE_LABELS[s]}</option>)}
+            </select>
+            <p className="mt-1 text-xs text-fg-subtle">Alleen het aantal medewerkers in je hele organisatie, niet de naam.</p>
+          </div>
+          <div className="sm:col-span-2">
             <span className="label">Hoeveel plezier heb je in je werk?</span>
             <div className="mt-1 grid grid-cols-5 gap-1" role="radiogroup" aria-label="Werkplezier">
               {WERKPLEZIER_LABELS.map((label, i) => (

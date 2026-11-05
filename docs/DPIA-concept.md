@@ -23,7 +23,7 @@
 |---|---|---|
 | Verwerking van BSN (art. 46 UAVG) | Middel/hoog | Afschermen verplicht; OCR-blokkade in de browser; LLM-detectie; output-scrub; geen opslag. **Restrisico:** een BSN dat door alle lagen glipt, wordt kort door Mistral verwerkt → juridisch beoordelen |
 | Naam/adres op de strook bij de LLM | Hoog/laag | Gebruiker mag ze afschermen; de LLM mag ze niet teruggeven; scrub; geen opslag |
-| Herleidbaarheid via een zeldzame combinatie (functie + sector + provincie + leeftijd) | Laag/middel | Alleen banden opgeslagen; k ≥ 10 bij tonen; geen ruwe export |
+| Herleidbaarheid via een zeldzame combinatie (functie + sector + provincie + leeftijd + bedrijfsgrootte) | Laag/middel | Alleen banden opgeslagen (ook bedrijfsgrootte, nooit de werkgeversnaam); k ≥ 10 bij tonen, ook per bedrijfsgrootte; bedrijfsgrootte is geen filter in de peergroep-cascade; geen ruwe export. Let op: de band 1-9 in een kleine functie/provincie is het meest identificerend |
 | Lek van de database | Laag/laag | Geen directe PII; RLS; alleen een service role op de server |
 | Prompt injection via de strook | Laag/laag | Tool-use met een strikt schema; zod-validatie; LLM-output bepaalt alleen voorinvulling en score |
 | Geautomatiseerde besluitvorming (art. 22) | Laag | Een afwijzing heeft geen rechtsgevolg; je kunt het opnieuw proberen of contact opnemen |

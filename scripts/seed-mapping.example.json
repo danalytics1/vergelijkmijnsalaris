@@ -1,5 +1,5 @@
 {
-  "_uitleg": "Koppel kolomnamen uit jouw CSV aan de velden van VergelijkMijnSalaris. Kopieer naar seed-mapping.json en pas aan. Waarden in 'defaults' worden gebruikt als een kolom ontbreekt.",
+  "_uitleg": "Koppel kolomnamen uit jouw CSV aan de velden van VergelijkMijnSalaris. Kopieer naar seed-mapping.json en pas aan. Waarden in 'defaults' worden gebruikt als een kolom ontbreekt. bedrijfsgrootte: een band (1-9, 10-49, 50-249, 250-999, 1000+) of een aantal medewerkers.",
   "delimiter": ";",
   "decimal": ",",
   "columns": {
@@ -9,6 +9,7 @@
     "leeftijd": "Leeftijd",
     "dienstjaren": "Ervaring",
     "opleidingsniveau": "Opleiding",
+    "bedrijfsgrootte": null,
     "uren_per_week": "Uren",
     "bruto_maand": "Bruto maandsalaris",
     "vakantiegeld_pct": "Vakantiegeld",
