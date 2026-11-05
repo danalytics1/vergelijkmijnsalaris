@@ -7,8 +7,8 @@ export const metadata: Metadata = { title: "Vergelijk je salaris – VergelijkMi
 export default function Page() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-3xl font-bold mb-2">Vergelijk je salaris</h1>
-      <p className="text-slate-600 mb-8">In 3 stappen weet je waar je staat. Je strook wordt niet opgeslagen.</p>
+      <h1 className="text-4xl font-bold tracking-tight mb-2">Vergelijk je salaris</h1>
+      <p className="text-fg-muted mb-8">In 3 stappen weet je waar je staat. Je strook wordt na de analyse direct weggegooid en we slaan geen persoonsgegevens op: geen naam, BSN, IBAN, adres of werkgever.</p>
       <UploadFlow euOnly={llmInfo().euOnly} />
     </div>
   );

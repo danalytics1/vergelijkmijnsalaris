@@ -61,7 +61,7 @@ export default function MaskEditor({ source, masks, hits, onMasksChange }: Props
     <div>
       <canvas
         ref={ref}
-        className="w-full h-auto rounded-lg ring-1 ring-slate-300 cursor-crosshair touch-none select-none bg-white"
+        className="w-full h-auto rounded-lg ring-1 ring-line-strong cursor-crosshair touch-none select-none bg-white"
         onPointerDown={(e) => {
           (e.target as Element).setPointerCapture(e.pointerId);
           start.current = toCanvas(e);
