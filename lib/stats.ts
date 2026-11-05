@@ -46,3 +46,18 @@ function normalize(r: PeerStats): PeerStats {
     histogram: Array.isArray(r.histogram) ? r.histogram : [],
   };
 }
+
+export type TopFunctie = { functie: string; functie_key: string; n: number; p50: number; gedeeld: string[] };
+
+/** Best betalende functies (k >= 10) onder mensen die minstens één van deze vaardigheden delen. */
+export async function topFunctiesVoorVaardigheden(vaardigheden: string[], excludeFunctieKey: string | null, limit = 3): Promise<TopFunctie[]> {
+  if (vaardigheden.length === 0) return [];
+  const { data, error } = await db().rpc("top_functies_vaardigheden", {
+    p_vaardigheden: vaardigheden, p_exclude_functie_key: excludeFunctieKey, p_limit: limit, p_min_k: 10,
+  });
+  if (error || !Array.isArray(data)) return [];
+  return (data as TopFunctie[]).map((r) => ({
+    functie: r.functie, functie_key: r.functie_key, n: Number(r.n), p50: Number(r.p50),
+    gedeeld: Array.isArray(r.gedeeld) ? r.gedeeld : [],
+  }));
+}

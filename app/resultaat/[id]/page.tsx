@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/supabase/server";
-import { compare } from "@/lib/stats";
+import { compare, topFunctiesVoorVaardigheden } from "@/lib/stats";
 import DeleteButton from "@/components/DeleteButton";
 import ResultChart from "@/components/ResultChart";
 
@@ -20,16 +20,20 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
   const { data: s } = await db()
     .from("submissions")
-    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, source")
+    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, vaardigheden, source")
     .eq("id", id)
     .eq("source", "upload")
     .maybeSingle();
   if (!s) notFound();
 
-  const cmp = await compare(
-    { functie_key: s.functie_key, sector: s.sector, provincie: s.provincie ?? "", ervaringsband: s.ervaringsband },
-    Number(s.bruto_maand_fte),
-  );
+  const vaardigheden: string[] = Array.isArray(s.vaardigheden) ? s.vaardigheden : [];
+  const [cmp, topFuncties] = await Promise.all([
+    compare(
+      { functie_key: s.functie_key, sector: s.sector, provincie: s.provincie ?? "", ervaringsband: s.ervaringsband },
+      Number(s.bruto_maand_fte),
+    ),
+    topFunctiesVoorVaardigheden(vaardigheden, s.functie_key),
+  ]);
 
   const fte = Number(s.bruto_maand_fte);
   const diff = cmp ? (fte - cmp.stats.p50) / cmp.stats.p50 : 0;
@@ -104,6 +108,51 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div className="card text-fg-muted">
           Om je privacy te beschermen tonen we alleen vergelijkingen met minimaal 10 salarissen. Er staan op dit moment nog te weinig salarissen in onze
           database om een vergelijking te maken, zelfs op landelijk niveau. Je gegevens helpen anderen wel. Kom later terug via deze link.
+        </div>
+      )}
+
+      {vaardigheden.length > 0 && (
+        <div className="card">
+          <h2 className="font-semibold text-lg">Best betaalde functies bij jouw vaardigheden</h2>
+          <p className="mt-1 text-sm text-fg-subtle">
+            Functies met het hoogste mediaansalaris onder mensen die minstens één van jouw vaardigheden hebben opgegeven
+            ({vaardigheden.join(", ")}).
+          </p>
+          {topFuncties.length > 0 ? (
+            <ol className="mt-4 space-y-3">
+              {topFuncties.map((f, i) => {
+                const verschil = (f.p50 - fte) / fte;
+                return (
+                  <li key={f.functie_key} className="flex items-start gap-4 rounded-lg bg-surface-2 p-4 ring-1 ring-line">
+                    <span className="font-mono text-lime text-lg leading-6">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                        <span className="font-semibold">{f.functie}</span>
+                        <span className="font-bold">{eur(f.p50)} <span className="text-xs font-normal text-fg-subtle">mediaan</span></span>
+                      </div>
+                      <div className="mt-1 text-xs text-fg-subtle">
+                        <span className={verschil >= 0 ? "text-lime" : "text-red-400"}>
+                          {verschil >= 0 ? "+" : "−"}{Math.abs(Math.round(verschil * 100))}% t.o.v. jou
+                        </span>
+                        {" · "}{f.n} salarissen
+                        {f.gedeeld.length > 0 && <> · gedeelde vaardigheden: {f.gedeeld.join(", ")}</>}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p className="mt-4 text-sm text-fg-muted">
+              Er zijn nog te weinig salarissen met deze vaardigheden om functies te tonen. We laten een functie pas zien vanaf 10
+              salarissen. Kom later terug via deze link.
+            </p>
+          )}
+          {topFuncties.length > 0 && (
+            <p className="mt-4 text-xs text-fg-subtle">
+              Bedragen fulltime (40 uur), bruto per maand, inclusief eventuele 13e maand. Je eigen functie is niet meegenomen.
+            </p>
+          )}
         </div>
       )}
 
