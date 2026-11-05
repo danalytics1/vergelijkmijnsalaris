@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PROVINCIES, SECTOREN, OPLEIDINGSNIVEAUS } from "@/lib/schema";
+import { PROVINCIES, SECTOREN, OPLEIDINGSNIVEAUS, SENIORITEITEN, WERKPLEZIER_LABELS } from "@/lib/schema";
+import { seniority } from "@/lib/normalize";
+import VaardighedenPicker from "./VaardighedenPicker";
 
 export type Prefill = {
   functie: string | null; sector: string | null; provincie: string | null; leeftijd: number | null;
@@ -25,11 +27,15 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
     vakantiegeld_pct: (prefill.vakantiegeld_pct ?? 8).toString(),
     dertiende_maand: prefill.dertiende_maand ?? false,
     thuiswerkdagen: "0",
+    senioriteit: (prefill.functie && seniority(prefill.functie)) || "",
+    werkplezier: "",
     pensioen_pct: prefill.pensioen_pct?.toString() ?? "",
     lease_auto: prefill.lease_auto ?? false,
     cao: prefill.cao ?? "",
     periode: prefill.periode ?? "",
   });
+  const [vaardigheden, setVaardigheden] = useState<string[]>([]);
+  const [fout, setFout] = useState<string | null>(null);
   const [suggesties, setSuggesties] = useState<string[]>([]);
 
   useEffect(() => {
@@ -51,6 +57,8 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
 
   function handle(e: React.FormEvent) {
     e.preventDefault();
+    if (vaardigheden.length === 0) { setFout("Kies minstens één vaardigheid of kwalificatie."); return; }
+    setFout(null);
     onSubmit({
       functie: v.functie,
       sector: v.sector,
@@ -63,6 +71,9 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
       vakantiegeld_pct: Number(v.vakantiegeld_pct),
       dertiende_maand: v.dertiende_maand,
       thuiswerkdagen: Number(v.thuiswerkdagen),
+      senioriteit: v.senioriteit,
+      werkplezier: Number(v.werkplezier),
+      vaardigheden,
       pensioen_pct: v.pensioen_pct === "" ? null : Number(v.pensioen_pct),
       lease_auto: v.lease_auto,
       cao: v.cao || null,
@@ -161,6 +172,39 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
             <p className="ml-6 text-xs text-slate-500">Telt mee in je salaris: we rekenen met 13/12 van je maandsalaris (+8,33%).</p>
           </div>
           <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={v.lease_auto} onChange={set("lease_auto")} /> Leaseauto</label>
+        </div>
+      </fieldset>
+
+      <fieldset className="space-y-4 border-t border-slate-200 pt-6">
+        <div>
+          <h3 className="font-semibold">Over je werk</h3>
+          <p className="text-sm text-slate-600">Deze vragen staan niet op je strook. Ze helpen om salarissen eerlijker te vergelijken.</p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="label">Senioriteit</label>
+            <select className="input" required value={v.senioriteit} onChange={set("senioriteit")}>
+              <option value="">Kies…</option>
+              {SENIORITEITEN.map((s) => <option key={s} value={s}>{s[0].toUpperCase() + s.slice(1)}</option>)}
+            </select>
+          </div>
+          <div>
+            <span className="label">Hoeveel plezier heb je in je werk?</span>
+            <div className="mt-1 grid grid-cols-5 gap-1" role="radiogroup" aria-label="Werkplezier">
+              {WERKPLEZIER_LABELS.map((label, i) => (
+                <label key={label} className={`cursor-pointer rounded-lg px-1 py-2 text-center text-xs ring-1 ${v.werkplezier === String(i + 1) ? "bg-accent-600 text-white ring-accent-600" : "ring-slate-300 hover:ring-accent-600"}`}>
+                  <input type="radio" name="werkplezier" className="sr-only" required value={String(i + 1)} checked={v.werkplezier === String(i + 1)} onChange={set("werkplezier")} />
+                  <span className="block text-base font-semibold">{i + 1}</span>{label}
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <label className="label">Je drie belangrijkste vaardigheden of kwalificaties</label>
+          <p className="text-xs text-slate-500 mb-2">Kies er maximaal 3 uit de lijst, in volgorde van belang.</p>
+          <VaardighedenPicker value={vaardigheden} onChange={(x) => { setVaardigheden(x); if (x.length) setFout(null); }} />
+          {fout && <p className="mt-1 text-sm text-red-700">{fout}</p>}
         </div>
       </fieldset>
 

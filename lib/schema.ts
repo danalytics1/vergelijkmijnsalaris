@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { VAARDIGHEDEN, MAX_VAARDIGHEDEN } from "./vaardigheden";
 
 export const PROVINCIES = [
   "Drenthe", "Flevoland", "Friesland", "Gelderland", "Groningen", "Limburg",
@@ -12,6 +13,11 @@ export const SECTOREN = [
 ] as const;
 
 export const OPLEIDINGSNIVEAUS = ["vmbo/mbo1", "mbo", "hbo", "wo", "onbekend"] as const;
+
+export const SENIORITEITEN = ["junior", "medior", "senior", "lead", "manager"] as const;
+
+/** Werkplezier op een schaal van 1 (helemaal niet) tot 5 (heel veel). */
+export const WERKPLEZIER_LABELS = ["Helemaal niet", "Weinig", "Neutraal", "Veel", "Heel veel"] as const;
 
 export const PERIODE_TYPES = ["maand", "4weken", "week"] as const;
 
@@ -64,6 +70,10 @@ export const SubmissionSchema = z.object({
   vakantiegeld_pct: z.number().min(0).max(25),
   dertiende_maand: z.boolean(),
   thuiswerkdagen: z.number().min(0).max(5).multipleOf(0.5),
+  werkplezier: z.number().int().min(1).max(5),
+  senioriteit: z.enum(SENIORITEITEN),
+  vaardigheden: z.array(z.enum(VAARDIGHEDEN)).min(1).max(MAX_VAARDIGHEDEN)
+    .refine((a) => new Set(a).size === a.length, "dubbele vaardigheid"),
   pensioen_pct: z.number().min(0).max(30).nullable(),
   lease_auto: z.boolean(),
   cao: z.string().max(100).nullable(),

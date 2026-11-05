@@ -3,7 +3,7 @@ import { randomBytes, createHash } from "node:crypto";
 import { z } from "zod";
 import { SubmissionSchema } from "@/lib/schema";
 import { verifyToken, matchesToken } from "@/lib/token";
-import { functieKey, seniority, leeftijdsband, ervaringsband, fulltimeEquivalent } from "@/lib/normalize";
+import { functieKey, leeftijdsband, ervaringsband, fulltimeEquivalent } from "@/lib/normalize";
 import { db } from "@/lib/supabase/server";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     file_hash: token.file_hash,
     functie: s.functie.trim(),
     functie_key: functieKey(s.functie),
-    seniority: seniority(s.functie),
+    seniority: s.senioriteit,
     sector: s.sector,
     provincie: s.provincie,
     leeftijdsband: leeftijdsband(s.leeftijd),
@@ -52,6 +52,8 @@ export async function POST(req: Request) {
     vakantiegeld_pct: s.vakantiegeld_pct,
     dertiende_maand: s.dertiende_maand,
     thuiswerkdagen: s.thuiswerkdagen,
+    werkplezier: s.werkplezier,
+    vaardigheden: s.vaardigheden,
     pensioen_pct: s.pensioen_pct,
     lease_auto: s.lease_auto,
     cao: s.cao,
