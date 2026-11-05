@@ -111,48 +111,52 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </div>
       )}
 
-      {vaardigheden.length > 0 && (
+      {vaardigheden.length > 0 && topFuncties.length > 0 && (
         <div className="card">
           <h2 className="font-semibold text-lg">Best betaalde functies bij jouw vaardigheden</h2>
-          <p className="mt-1 text-sm text-fg-subtle">
-            Functies met het hoogste mediaansalaris onder mensen die minstens één van jouw vaardigheden hebben opgegeven
-            ({vaardigheden.join(", ")}).
-          </p>
-          {topFuncties.length > 0 ? (
-            <ol className="mt-4 space-y-3">
-              {topFuncties.map((f, i) => {
-                const verschil = (f.p50 - fte) / fte;
-                return (
-                  <li key={f.functie_key} className="flex items-start gap-4 rounded-lg bg-surface-2 p-4 ring-1 ring-line">
-                    <span className="font-mono text-lime text-lg leading-6">{i + 1}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                        <span className="font-semibold">{f.functie}</span>
+          <p className="mt-1 text-sm text-fg-subtle">Op basis van: {vaardigheden.join(", ")}.</p>
+          <ol className="mt-4 space-y-3">
+            {topFuncties.map((f, i) => {
+              const verschil = f.p50 != null ? (f.p50 - fte) / fte : null;
+              return (
+                <li key={f.functie_key} className="flex items-start gap-4 rounded-lg bg-surface-2 p-4 ring-1 ring-line">
+                  <span className="font-mono text-lime text-lg leading-6">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <span className="font-semibold">{f.functie}</span>
+                      {f.p50 != null ? (
                         <span className="font-bold">{eur(f.p50)} <span className="text-xs font-normal text-fg-subtle">mediaan</span></span>
-                      </div>
-                      <div className="mt-1 text-xs text-fg-subtle">
-                        <span className={verschil >= 0 ? "text-lime" : "text-red-400"}>
-                          {verschil >= 0 ? "+" : "−"}{Math.abs(Math.round(verschil * 100))}% t.o.v. jou
-                        </span>
-                        {" · "}{f.n} salarissen
-                        {f.gedeeld.length > 0 && <> · gedeelde vaardigheden: {f.gedeeld.join(", ")}</>}
-                      </div>
+                      ) : (
+                        <span className="text-xs text-fg-subtle">nog geen salarisdata</span>
+                      )}
                     </div>
-                  </li>
-                );
-              })}
-            </ol>
-          ) : (
-            <p className="mt-4 text-sm text-fg-muted">
-              Er zijn nog te weinig salarissen met deze vaardigheden om functies te tonen. We laten een functie pas zien vanaf 10
-              salarissen. Kom later terug via deze link.
-            </p>
-          )}
-          {topFuncties.length > 0 && (
-            <p className="mt-4 text-xs text-fg-subtle">
-              Bedragen fulltime (40 uur), bruto per maand, inclusief eventuele 13e maand. Je eigen functie is niet meegenomen.
-            </p>
-          )}
+                    <div className="mt-1 text-xs text-fg-subtle">
+                      {verschil != null && (
+                        <>
+                          <span className={verschil >= 0 ? "text-lime" : "text-red-400"}>
+                            {verschil >= 0 ? "+" : "−"}{Math.abs(Math.round(verschil * 100))}% t.o.v. jou
+                          </span>
+                          {" · "}{f.n} salarissen{" · "}
+                        </>
+                      )}
+                      {f.bron === "data" ? "gemeten bij mensen met jouw vaardigheden" : "indicatie"}
+                      {f.gedeeld.length > 0 && <> · past bij: {f.gedeeld.join(", ")}</>}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-4 text-xs text-fg-subtle">
+            Bedragen fulltime (40 uur), bruto per maand, inclusief eventuele 13e maand. Je eigen functie is niet meegenomen.
+            {topFuncties.some((f) => f.bron === "indicatie") && (
+              <>
+                {" "}Functies met &lsquo;indicatie&rsquo; komen uit een vaste koppeling tussen vaardigheden en functies, omdat we nog te weinig
+                salarissen met jouw vaardigheden hebben. Het salaris daarbij is de landelijke mediaan voor die functie (alle sectoren),
+                als we daar minstens 10 salarissen van hebben.
+              </>
+            )}
+          </p>
         </div>
       )}
 
