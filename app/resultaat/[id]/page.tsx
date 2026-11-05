@@ -37,11 +37,11 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 space-y-6">
       <div>
-        <div className="text-sm text-slate-500">{s.functie} · {s.sector} · {s.provincie} · {s.ervaringsband} jaar ervaring</div>
+        <div className="text-sm text-fg-subtle">{s.functie} · {s.sector} · {s.provincie} · {s.ervaringsband} jaar ervaring</div>
         {cmp ? (
           <h1 className="text-3xl sm:text-4xl font-bold mt-1">
             Je verdient{" "}
-            <span className={diff >= 0 ? "text-accent-600" : "text-red-600"}>
+            <span className={diff >= 0 ? "text-lime" : "text-red-400"}>
               {Math.abs(Math.round(diff * 100))}% {diff >= 0 ? "meer" : "minder"}
             </span>{" "}
             dan de mediaan
@@ -52,7 +52,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       </div>
 
       {cmp?.verbreed && (
-        <div className="rounded-xl bg-amber-50 ring-1 ring-amber-200 p-4 text-sm text-amber-800">
+        <div className="rounded-xl bg-amber-400/10 ring-1 ring-amber-400/30 p-4 text-sm text-amber-300">
           Er zijn nog geen 10 salarissen van mensen met dezelfde functie, sector, provincie en ervaring als jij. Om je privacy te
           beschermen tonen we pas een vergelijking vanaf 10 salarissen. Daarom vergelijken we je met een bredere groep:{" "}
           <strong>{cmp.level}</strong> ({cmp.stats.n} salarissen).{" "}
@@ -63,7 +63,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       )}
 
       {u === "1" && (
-        <div className="rounded-xl bg-amber-50 ring-1 ring-amber-200 p-4 text-sm text-amber-800">
+        <div className="rounded-xl bg-amber-400/10 ring-1 ring-amber-400/30 p-4 text-sm text-amber-300">
           Je gegevens tellen niet mee in de statistieken, omdat de strook niet volledig gecontroleerd kon worden of omdat je gegevens sterk hebt aangepast.
         </div>
       )}
@@ -72,7 +72,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <>
           <div className="card">
             <ResultChart value={fte} stats={cmp.stats} />
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-fg-subtle">
               Vergeleken met {cmp.stats.n} salarissen van mensen met {cmp.level}. Bedragen omgerekend naar fulltime (40 uur), bruto per maand,
               inclusief een eventuele 13e maand (verdeeld over 12 maanden), exclusief vakantiegeld. Jouw salaris: {eur(Number(s.bruto_maand))}
               {s.dertiende_maand ? " + 13e maand (× 13/12)" : ""} voor {Number(s.uren_per_week)} uur = {eur(fte)} fulltime.
@@ -89,8 +89,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <div className="card">
             <h2 className="font-semibold text-lg mb-4">Secundaire arbeidsvoorwaarden</h2>
             <table className="w-full text-sm">
-              <thead className="text-left text-slate-500"><tr><th className="pb-2">Voorwaarde</th><th className="pb-2">Jij</th><th className="pb-2">Vergelijkbaar</th></tr></thead>
-              <tbody className="divide-y divide-slate-100">
+              <thead className="text-left text-fg-subtle"><tr><th className="pb-2">Voorwaarde</th><th className="pb-2">Jij</th><th className="pb-2">Vergelijkbaar</th></tr></thead>
+              <tbody className="divide-y divide-line">
                 <tr><td className="py-2">13e maand</td><td>{s.dertiende_maand ? "Ja" : "Nee"}</td><td>{cmp.stats.pct_dertiende != null ? `${pct(cmp.stats.pct_dertiende)} heeft dit` : "–"}</td></tr>
                 <tr><td className="py-2">Thuiswerken</td><td>{s.thuiswerkdagen != null ? dagen(Number(s.thuiswerkdagen)) : "–"}</td><td>{cmp.stats.avg_thuiswerkdagen != null ? `gem. ${dagen(cmp.stats.avg_thuiswerkdagen)}` : "–"}</td></tr>
                 <tr><td className="py-2">Leaseauto</td><td>{s.lease_auto ? "Ja" : "Nee"}</td><td>{cmp.stats.pct_lease != null ? `${pct(cmp.stats.pct_lease)} heeft dit` : "–"}</td></tr>
@@ -101,7 +101,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           </div>
         </>
       ) : (
-        <div className="card text-slate-600">
+        <div className="card text-fg-muted">
           Om je privacy te beschermen tonen we alleen vergelijkingen met minimaal 10 salarissen. Er staan op dit moment nog te weinig salarissen in onze
           database om een vergelijking te maken, zelfs op landelijk niveau. Je gegevens helpen anderen wel. Kom later terug via deze link.
         </div>
@@ -109,7 +109,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
       <div className="card space-y-3">
         <h2 className="font-semibold">Jouw gegevens</h2>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-fg-muted">
           Bewaar deze link als je later terug wilt komen of je gegevens wilt verwijderen. We hebben geen account of e-mailadres van je, dus zonder deze link kunnen we je inzending niet terugvinden.
         </p>
         {k && <DeleteButton id={id} deleteKey={k} />}
@@ -124,7 +124,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="card !p-4 text-center">
       <div className="text-xl font-bold">{value}</div>
-      <div className="text-xs text-slate-500 mt-1">{label}</div>
+      <div className="text-xs text-fg-subtle mt-1">{label}</div>
     </div>
   );
 }

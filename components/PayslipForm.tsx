@@ -82,15 +82,15 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
   }
 
   const Tag = ({ k }: { k: keyof Prefill }) =>
-    fromStrook(k) ? <span className="ml-2 text-xs font-normal text-accent-600">✓ uit strook</span> : <span className="ml-2 text-xs font-normal text-amber-600">zelf invullen</span>;
+    fromStrook(k) ? <span className="ml-2 text-xs font-normal text-lime">✓ uit strook</span> : <span className="ml-2 text-xs font-normal text-amber-300">zelf invullen</span>;
 
   return (
     <form onSubmit={handle} className="card space-y-6">
       <div>
         <h2 className="text-xl font-semibold">Controleer je gegevens</h2>
-        <p className="text-slate-600 mt-1">We hebben je strook uitgelezen. Klopt er iets niet of mist er iets? Pas het hier aan.</p>
+        <p className="text-fg-muted mt-1">We hebben je strook uitgelezen. Klopt er iets niet of mist er iets? Pas het hier aan.</p>
         {!verified && (
-          <p className="mt-3 rounded-lg bg-amber-50 ring-1 ring-amber-200 p-3 text-sm text-amber-800">
+          <p className="mt-3 rounded-lg bg-amber-400/10 ring-1 ring-amber-400/30 p-3 text-sm text-amber-300">
             We konden je strook niet volledig controleren. Je krijgt wel een vergelijking, maar je gegevens tellen niet mee in de statistieken.
           </p>
         )}
@@ -136,11 +136,11 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
         </div>
       </fieldset>
 
-      <fieldset className="grid gap-4 sm:grid-cols-2 border-t border-slate-200 pt-6">
+      <fieldset className="grid gap-4 sm:grid-cols-2 border-t border-line pt-6">
         <div>
           <label className="label">Bruto maandsalaris (€)<Tag k="bruto_maand" /></label>
           <input className="input" type="number" required min={500} max={100000} step={0.01} value={v.bruto_maand} onChange={set("bruto_maand")} />
-          {changedBruto && <p className="mt-1 text-xs text-amber-700">Wijkt meer dan 5% af van je strook. Je vergelijking telt dan niet mee in de statistieken.</p>}
+          {changedBruto && <p className="mt-1 text-xs text-amber-300">Wijkt meer dan 5% af van je strook. Je vergelijking telt dan niet mee in de statistieken.</p>}
         </div>
         <div>
           <label className="label">Uren per week<Tag k="uren_per_week" /></label>
@@ -159,7 +159,7 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
           <input className="input" type="month" required value={v.periode} onChange={set("periode")} />
         </div>
         <div>
-          <label className="label">Thuiswerkdagen per week<span className="ml-2 text-xs font-normal text-amber-600">zelf invullen</span></label>
+          <label className="label">Thuiswerkdagen per week<span className="ml-2 text-xs font-normal text-amber-300">zelf invullen</span></label>
           <select className="input" value={v.thuiswerkdagen} onChange={set("thuiswerkdagen")}>
             {[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((d) => (
               <option key={d} value={String(d)}>{d === 0 ? "Geen" : `${String(d).replace(".", ",")} ${d === 1 ? "dag" : "dagen"}`}</option>
@@ -169,16 +169,16 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
         <div className="flex flex-col gap-3 justify-end">
           <div>
             <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={v.dertiende_maand} onChange={set("dertiende_maand")} /> 13e maand / eindejaarsuitkering</label>
-            <p className="ml-6 text-xs text-slate-500">Telt mee in je salaris: we rekenen met 13/12 van je maandsalaris (+8,33%).</p>
+            <p className="ml-6 text-xs text-fg-subtle">Telt mee in je salaris: we rekenen met 13/12 van je maandsalaris (+8,33%).</p>
           </div>
           <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={v.lease_auto} onChange={set("lease_auto")} /> Leaseauto</label>
         </div>
       </fieldset>
 
-      <fieldset className="space-y-4 border-t border-slate-200 pt-6">
+      <fieldset className="space-y-4 border-t border-line pt-6">
         <div>
           <h3 className="font-semibold">Over je werk</h3>
-          <p className="text-sm text-slate-600">Deze vragen staan niet op je strook. Ze helpen om salarissen eerlijker te vergelijken.</p>
+          <p className="text-sm text-fg-muted">Deze vragen staan niet op je strook. Ze helpen om salarissen eerlijker te vergelijken.</p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -192,7 +192,7 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
             <span className="label">Hoeveel plezier heb je in je werk?</span>
             <div className="mt-1 grid grid-cols-5 gap-1" role="radiogroup" aria-label="Werkplezier">
               {WERKPLEZIER_LABELS.map((label, i) => (
-                <label key={label} className={`cursor-pointer rounded-lg px-1 py-2 text-center text-xs ring-1 ${v.werkplezier === String(i + 1) ? "bg-accent-600 text-white ring-accent-600" : "ring-slate-300 hover:ring-accent-600"}`}>
+                <label key={label} className={`cursor-pointer rounded-lg px-1 py-2 text-center text-xs ring-1 ${v.werkplezier === String(i + 1) ? "bg-lime text-ink ring-lime" : "ring-line-strong hover:ring-lime"}`}>
                   <input type="radio" name="werkplezier" className="sr-only" required value={String(i + 1)} checked={v.werkplezier === String(i + 1)} onChange={set("werkplezier")} />
                   <span className="block text-base font-semibold">{i + 1}</span>{label}
                 </label>
@@ -202,9 +202,9 @@ export default function PayslipForm({ prefill, verified, busy, onSubmit }: Props
         </div>
         <div>
           <label className="label">Je drie belangrijkste vaardigheden of kwalificaties</label>
-          <p className="text-xs text-slate-500 mb-2">Kies er maximaal 3 uit de lijst, in volgorde van belang.</p>
+          <p className="text-xs text-fg-subtle mb-2">Kies er maximaal 3 uit de lijst, in volgorde van belang.</p>
           <VaardighedenPicker value={vaardigheden} onChange={(x) => { setVaardigheden(x); if (x.length) setFout(null); }} />
-          {fout && <p className="mt-1 text-sm text-red-700">{fout}</p>}
+          {fout && <p className="mt-1 text-sm text-red-400">{fout}</p>}
         </div>
       </fieldset>
 

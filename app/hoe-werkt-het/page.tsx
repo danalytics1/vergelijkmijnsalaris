@@ -23,7 +23,7 @@ export default function Page() {
         Je ziet een ingevuld formulier en kunt dat aanpassen. Daarna vergelijken we je salaris, omgerekend naar 40 uur, met mensen in dezelfde functie, sector,
         regio en ervaringscategorie.
       </p>
-      <Link href="/vergelijk" className="btn-primary !no-underline !text-white">Start de vergelijking</Link>
+      <Link href="/vergelijk" className="btn-primary !no-underline !text-ink">Start de vergelijking</Link>
     </Prose>
   );
 }

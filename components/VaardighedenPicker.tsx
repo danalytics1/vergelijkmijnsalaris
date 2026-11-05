@@ -26,25 +26,25 @@ export default function VaardighedenPicker({ value, onChange }: Props) {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2 min-h-9">
-        {value.length === 0 && <span className="text-sm text-slate-500">Nog niets gekozen</span>}
+        {value.length === 0 && <span className="text-sm text-fg-subtle">Nog niets gekozen</span>}
         {value.map((item, i) => (
           <button type="button" key={item} onClick={() => toggle(item)}
-            className="inline-flex items-center gap-1 rounded-full bg-accent-600 px-3 py-1 text-sm text-white"
+            className="inline-flex items-center gap-1 rounded-full bg-lime px-3 py-1 text-sm text-ink"
             aria-label={`${item} verwijderen`}>
             <span className="text-xs opacity-80">{i + 1}.</span> {item} <span aria-hidden>×</span>
           </button>
         ))}
-        <span className="ml-auto text-xs text-slate-500">{value.length}/{MAX_VAARDIGHEDEN}</span>
+        <span className="ml-auto text-xs text-fg-subtle">{value.length}/{MAX_VAARDIGHEDEN}</span>
       </div>
 
       <input className="input mt-2" type="search" placeholder="Zoek, bv. Python, CFA, Wft, Analytisch…"
         value={q} onChange={(e) => setQ(e.target.value)} />
 
-      <div className="mt-2 max-h-64 overflow-y-auto rounded-lg ring-1 ring-slate-200 p-3 space-y-3">
-        {groepen.length === 0 && <p className="text-sm text-slate-500">Geen resultaten. Kies de vaardigheid die er het dichtst bij komt.</p>}
+      <div className="mt-2 max-h-64 overflow-y-auto rounded-lg ring-1 ring-line p-3 space-y-3">
+        {groepen.length === 0 && <p className="text-sm text-fg-subtle">Geen resultaten. Kies de vaardigheid die er het dichtst bij komt.</p>}
         {groepen.map(([groep, items]) => (
           <div key={groep}>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{groep}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">{groep}</p>
             <div className="mt-1 flex flex-wrap gap-2">
               {items.map((item) => {
                 const on = value.includes(item);
@@ -52,8 +52,8 @@ export default function VaardighedenPicker({ value, onChange }: Props) {
                   <button type="button" key={item} onClick={() => toggle(item)} disabled={!on && vol}
                     aria-pressed={on}
                     className={`rounded-full px-3 py-1 text-sm ring-1 transition ${on
-                      ? "bg-accent-600 text-white ring-accent-600"
-                      : "bg-white text-slate-700 ring-slate-300 hover:ring-accent-600 disabled:opacity-40 disabled:hover:ring-slate-300"}`}>
+                      ? "bg-lime text-ink ring-lime"
+                      : "bg-surface-2 text-fg-muted ring-line-strong hover:ring-lime disabled:opacity-40 disabled:hover:ring-line-strong"}`}>
                     {item}
                   </button>
                 );

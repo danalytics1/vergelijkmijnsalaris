@@ -169,18 +169,18 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
     <div className="space-y-6">
       <Stepper step={step} />
 
-      {error && <div role="alert" className="rounded-xl bg-red-50 text-red-800 ring-1 ring-red-200 p-4">{error}</div>}
+      {error && <div role="alert" className="rounded-xl bg-red-500/10 text-red-400 ring-1 ring-red-400/40 p-4">{error}</div>}
 
       {step === "upload" && (
         <div className="card space-y-5">
           <h2 className="text-xl font-semibold">Upload je salarisstrook</h2>
-          <p className="text-slate-600">
+          <p className="text-fg-muted">
             Een PDF of een screenshot van je meest recente salarisstrook. In de volgende stap scherm je je <strong>BSN en IBAN</strong> af.
             Dat gebeurt volledig in je browser: de originele strook verlaat je apparaat niet.
           </p>
-          <div className={`rounded-xl p-4 ring-2 transition ${consent ? "bg-green-50 ring-green-300" : consentNudge ? "bg-red-50 ring-red-400" : "bg-amber-50 ring-amber-300"}`}>
+          <div className={`rounded-xl p-4 ring-2 transition ${consent ? "bg-lime/10 ring-lime/40" : consentNudge ? "bg-red-500/10 ring-red-400/40" : "bg-amber-400/10 ring-amber-400/30"}`}>
             <div className="text-sm font-semibold mb-2">
-              Stap 1: geef toestemming {consent ? <span className="text-green-700">✓</span> : <span className="text-red-600">(verplicht)</span>}
+              Stap 1: geef toestemming {consent ? <span className="text-lime">✓</span> : <span className="text-red-400">(verplicht)</span>}
             </div>
             <label className="flex gap-3 items-start text-sm cursor-pointer">
               <input ref={consentRef} type="checkbox" className="mt-1 h-5 w-5 shrink-0" checked={consent}
@@ -188,11 +188,11 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
               <span>
                 Ik geef toestemming dat mijn afgeschermde salarisstrook eenmalig door een AI-model {euOnly ? "in de EU" : "buiten de EU (Verenigde Staten)"} wordt geanalyseerd. De strook wordt
                 niet opgeslagen. Alleen de geanonimiseerde salarisgegevens die ik hierna bevestig, worden bewaard. Zie de{" "}
-                <a href="/privacy" target="_blank" className="text-brand-600 underline">privacyverklaring</a>.
+                <a href="/privacy" target="_blank" className="text-lime underline">privacyverklaring</a>.
               </span>
             </label>
             {consentNudge && !consent && (
-              <p role="alert" className="mt-2 text-sm font-medium text-red-700">Vink eerst dit vakje aan. Daarna kun je je strook uploaden.</p>
+              <p role="alert" className="mt-2 text-sm font-medium text-red-400">Vink eerst dit vakje aan. Daarna kun je je strook uploaden.</p>
             )}
           </div>
           <div className="text-sm font-semibold">Stap 2: upload je strook</div>
@@ -200,11 +200,11 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
             onClick={(e) => { if (!consent) { e.preventDefault(); needConsent(); } }}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => { e.preventDefault(); if (!consent) return needConsent(); const f = e.dataTransfer.files?.[0]; if (f && !busy) onFile(f); }}
-            className={`block rounded-2xl border-2 border-dashed p-10 text-center transition ${consent ? "border-brand-500 bg-brand-50 cursor-pointer hover:bg-brand-100" : "border-slate-300 bg-slate-50 cursor-not-allowed"}`}>
+            className={`block rounded-2xl border-2 border-dashed p-10 text-center transition ${consent ? "border-lime bg-lime/5 cursor-pointer hover:bg-lime/10" : "border-line-strong bg-surface-2 cursor-not-allowed"}`}>
             <input type="file" accept={ACCEPT} className="sr-only" disabled={!consent || !!busy} onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
             <div className="text-4xl">{consent ? "📄" : "🔒"}</div>
             <div className="mt-2 font-semibold">{busy ?? (consent ? "Kies een bestand of sleep het hierheen" : "Geef eerst toestemming (stap 1)")}</div>
-            <div className="text-sm text-slate-500">PDF, PNG of JPG, maximaal 20 MB</div>
+            <div className="text-sm text-fg-subtle">PDF, PNG of JPG, maximaal 20 MB</div>
           </label>
         </div>
       )}
@@ -212,8 +212,8 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
       {step === "mask" && (
         <div className="card space-y-5">
           <div>
-            <h2 className="text-xl font-semibold">Scherm je BSN en IBAN af <span className="text-red-600">(verplicht)</span></h2>
-            <p className="text-slate-600 mt-1">
+            <h2 className="text-xl font-semibold">Scherm je BSN en IBAN af <span className="text-red-400">(verplicht)</span></h2>
+            <p className="text-fg-muted mt-1">
               Trek met je muis of vinger een zwarte balk over je <strong>BSN</strong> en <strong>IBAN</strong>. Je mag ook je naam en adres afschermen.
               Laat de bedragen, de periode en je functie zichtbaar. Klik daarna op <em>Controleren</em>.
             </p>
@@ -227,12 +227,12 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
           <div className="flex flex-wrap gap-3 items-center">
             <button className="btn-secondary" onClick={() => { setPages([]); setStep("upload"); }}>Ander bestand</button>
             <button className="btn-primary" disabled={!!busy} onClick={scan}>{busy ? "Bezig…" : "Controleren"}</button>
-            {busy && ocrProgress === null && <span className="text-sm text-slate-500">{busy}</span>}
+            {busy && ocrProgress === null && <span className="text-sm text-fg-subtle">{busy}</span>}
           </div>
           {busy && ocrProgress !== null && <ProgressBar value={ocrProgress} label={busy} />}
           {scanOk && (
-            <div className="rounded-xl bg-green-50 ring-1 ring-green-200 p-4 space-y-3">
-              <div className="text-green-800 font-medium">✓ Geen leesbaar BSN of IBAN gevonden.</div>
+            <div className="rounded-xl bg-lime/10 ring-1 ring-lime/40 p-4 space-y-3">
+              <div className="text-lime font-medium">✓ Geen leesbaar BSN of IBAN gevonden.</div>
               <label className="flex gap-3 items-start text-sm">
                 <input type="checkbox" className="mt-1 h-4 w-4" checked={confirmMasked} onChange={(e) => setConfirmMasked(e.target.checked)} />
                 <span>Ik bevestig dat mijn BSN en IBAN niet meer leesbaar zijn op deze afbeelding.</span>
@@ -245,9 +245,9 @@ export default function UploadFlow({ euOnly = true }: { euOnly?: boolean }) {
 
       {step === "analysing" && (
         <div className="card text-center py-16">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-brand-100 border-t-brand-500" />
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-lime/20 border-t-lime" />
           <div className="mt-4 font-semibold">Je strook wordt geanalyseerd…</div>
-          <div className="text-sm text-slate-500">Dit duurt meestal 10 tot 20 seconden.</div>
+          <div className="text-sm text-fg-subtle">Dit duurt meestal 10 tot 20 seconden.</div>
         </div>
       )}
 
@@ -262,12 +262,12 @@ function ProgressBar({ value, label }: { value: number; label: string }) {
   const pct = Math.round(value * 100);
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-sm text-slate-600">
+      <div className="flex justify-between text-sm text-fg-muted">
         <span>{label}</span>
         <span className="tabular-nums">{pct}%</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label={label}>
-        <div className="h-full rounded-full bg-brand-500 transition-[width] duration-300" style={{ width: `${pct}%` }} />
+      <div className="h-2 w-full overflow-hidden rounded-full bg-line-strong" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label={label}>
+        <div className="h-full rounded-full bg-lime transition-[width] duration-300" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );
@@ -285,9 +285,9 @@ function Stepper({ step }: { step: Step }) {
     <ol className="flex items-center gap-2 text-sm">
       {steps.map((s, i) => (
         <li key={s.label} className="flex items-center gap-2 flex-1">
-          <span className={`h-7 w-7 shrink-0 rounded-full grid place-items-center font-semibold ${i <= active ? "bg-brand-500 text-white" : "bg-slate-200 text-slate-500"}`}>{i + 1}</span>
-          <span className={`hidden sm:inline ${i === active ? "font-semibold" : "text-slate-500"}`}>{s.label}</span>
-          {i < steps.length - 1 && <span className="flex-1 h-px bg-slate-300" />}
+          <span className={`h-7 w-7 shrink-0 rounded-full grid place-items-center font-semibold ${i <= active ? "bg-lime text-ink" : "bg-line-strong text-fg-subtle"}`}>{i + 1}</span>
+          <span className={`hidden sm:inline ${i === active ? "font-semibold" : "text-fg-subtle"}`}>{s.label}</span>
+          {i < steps.length - 1 && <span className="flex-1 h-px bg-line-strong" />}
         </li>
       ))}
     </ol>
