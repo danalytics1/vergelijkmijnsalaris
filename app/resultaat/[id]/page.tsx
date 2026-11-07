@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/supabase/server";
-import { compare, topFunctiesVoorVaardigheden, medianenPerBedrijfsgrootte } from "@/lib/stats";
+import { compare, topFunctiesVoorVaardigheden, medianenPerBedrijfsgrootte, groeiPerSenioriteit } from "@/lib/stats";
+import { SENIORITEIT_LABELS, volgendeStap, type Senioriteit } from "@/lib/groei";
 import { BEDRIJFSGROOTTE_LABELS, type BEDRIJFSGROOTTES } from "@/lib/schema";
 import DeleteButton from "@/components/DeleteButton";
 import ResultChart from "@/components/ResultChart";
+import GroeiChart from "@/components/GroeiChart";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Jouw salarisvergelijking", robots: { index: false, follow: false } };
@@ -21,24 +23,28 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
   const { data: s } = await db()
     .from("submissions")
-    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, vaardigheden, bedrijfsgrootte, source")
+    .select("functie, functie_key, sector, provincie, ervaringsband, uren_per_week, bruto_maand, bruto_maand_fte, dertiende_maand, thuiswerkdagen, lease_auto, vakantiegeld_pct, pensioen_pct, vaardigheden, bedrijfsgrootte, seniority, source")
     .eq("id", id)
     .eq("source", "upload")
     .maybeSingle();
   if (!s) notFound();
 
   const vaardigheden: string[] = Array.isArray(s.vaardigheden) ? s.vaardigheden : [];
-  const [cmp, topFuncties, grootte] = await Promise.all([
+  const [cmp, topFuncties, grootte, groei] = await Promise.all([
     compare(
       { functie_key: s.functie_key, sector: s.sector, provincie: s.provincie ?? "", ervaringsband: s.ervaringsband },
       Number(s.bruto_maand_fte),
     ),
     topFunctiesVoorVaardigheden(vaardigheden, s.functie_key),
     medianenPerBedrijfsgrootte(s.functie_key, s.sector),
+    groeiPerSenioriteit(s.functie_key, s.sector),
   ]);
 
   const fte = Number(s.bruto_maand_fte);
   const diff = cmp ? (fte - cmp.stats.p50) / cmp.stats.p50 : 0;
+  const eigenNiveau: Senioriteit | null = s.seniority && s.seniority in SENIORITEIT_LABELS ? (s.seniority as Senioriteit) : null;
+  const eigenGroei = groei && eigenNiveau ? groei.punten.find((p) => p.seniority === eigenNiveau) : undefined;
+  const volgende = groei ? volgendeStap(groei.punten, eigenNiveau) : null;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 space-y-6">
@@ -110,6 +116,31 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div className="card text-fg-muted">
           Om je privacy te beschermen tonen we alleen vergelijkingen met minimaal 10 salarissen. Er staan op dit moment nog te weinig salarissen in onze
           database om een vergelijking te maken, zelfs op landelijk niveau. Je gegevens helpen anderen wel. Kom later terug via deze link.
+        </div>
+      )}
+
+      {groei && (
+        <div className="card">
+          <h2 className="font-semibold text-lg">Salarisgroei per senioriteit</h2>
+          <p className="mt-1 text-sm text-fg-subtle">
+            Wat {s.functie} {groei.niveau === "functie+sector" ? `in de sector ${s.sector}` : "in alle sectoren"} verdient per niveau.
+            Staaf = middelste 50%, lijn = mediaan{eigenNiveau ? ", stip = jij" : ""}.
+          </p>
+          <div className="mt-4">
+            <GroeiChart punten={groei.punten} eigen={eigenNiveau} value={fte} />
+          </div>
+          {volgende && (
+            <p className="mt-4 text-sm">
+              Volgende stap: <strong>{SENIORITEIT_LABELS[volgende.seniority].toLowerCase()}</strong> verdient mediaan{" "}
+              <strong>{eur(volgende.p50)}</strong>
+              {" "}(<span className={volgende.p50 >= fte ? "text-lime" : "text-red-400"}>{volgende.p50 >= fte ? "+" : "−"}{Math.abs(Math.round(((volgende.p50 - fte) / fte) * 100))}%</span> t.o.v. jou).
+            </p>
+          )}
+          <p className="mt-3 text-xs text-fg-subtle">
+            Momentopname: dit zijn salarissen van mensen die nú op dat niveau zitten, geen gevolgde loopbanen. Senioriteit is zelf opgegeven.
+            Alleen niveaus met minstens 10 salarissen; fulltime (40 uur), bruto per maand, inclusief eventuele 13e maand.
+            {eigenNiveau && !eigenGroei && " Voor jouw eigen niveau zijn nog te weinig salarissen om mee te vergelijken."}
+          </p>
         </div>
       )}
 
