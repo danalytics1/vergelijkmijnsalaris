@@ -2,6 +2,7 @@ import "server-only";
 import { db } from "./supabase/server";
 import { cascade, type PeerKey } from "./cascade";
 import { kandidaatFuncties, rangschikFallback } from "./functieSuggesties";
+import { sorteerPunten, type GroeiPunt } from "./groei";
 
 export { cascade, type PeerKey };
 
@@ -103,6 +104,26 @@ export async function medianenPerBedrijfsgrootte(functieKey: string, sector: str
       .map((r) => ({ bedrijfsgrootte: r.bedrijfsgrootte, n: Number(r.n), p50: Number(r.p50) }))
       .sort((a, b) => GROOTTE_VOLGORDE.indexOf(a.bedrijfsgrootte) - GROOTTE_VOLGORDE.indexOf(b.bedrijfsgrootte));
     if (rijen.length >= 2) return { niveau: p.niveau, rijen };
+  }
+  return null;
+}
+
+export type GroeiVergelijking = { niveau: "functie+sector" | "functie"; punten: GroeiPunt[] };
+
+/**
+ * P25/P50/P75 per senioriteit voor deze functie. Eerst binnen de eigen sector; zijn daar minder
+ * dan 2 niveaus met >= 10 salarissen, dan over alle sectoren. Null als ook dat niets oplevert.
+ */
+export async function groeiPerSenioriteit(functieKey: string, sector: string): Promise<GroeiVergelijking | null> {
+  const pogingen = [
+    { niveau: "functie+sector" as const, sector },
+    { niveau: "functie" as const, sector: null },
+  ];
+  for (const p of pogingen) {
+    const { data, error } = await db().rpc("senioriteit_percentielen", { p_functie_key: functieKey, p_sector: p.sector, p_min_k: 10 });
+    if (error || !Array.isArray(data)) continue;
+    const punten = sorteerPunten(data);
+    if (punten.length >= 2) return { niveau: p.niveau, punten };
   }
   return null;
 }
